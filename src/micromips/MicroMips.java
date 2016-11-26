@@ -1,5 +1,6 @@
 package micromips;
 
+import utilities.AssemblyRegex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
