@@ -27,3 +27,13 @@ public enum TYPE {
       return null;
    }
 }
+
+// Things they have in common
+   // Label
+   // Comment
+   // OpCode
+
+   // RType
+   //    R1, R2, R3
+   // IType
+   //    as
