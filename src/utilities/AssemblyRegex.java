@@ -4,28 +4,45 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AssemblyRegex {
-   private final String label    = "\\s*(\\w+:\\s+)";
-   private final String optLabel = label+"?";   // optional label
-   private final String word     = "(\\w+)";
-   private final String opCode   = word+"\\s+";
-   private final String reg      = "([rR]\\d{1,2})";
-   private final String comma    = "\\s*,\\s*";
-   private final String comment  = "(\\s*;.*)?";
+   private final String LABEL     = "\\s*(\\w+:\\s+)";
+   private final String OPT_LABEL = LABEL+"?";   // optional label
+   private final String WORD      = "(\\w+)";
+   private final String OP_CODE   = WORD+"\\s+";
+   private final String REG       = "([rR]\\d{1,2})";
+   private final String COMMA     = "\\s*,\\s*";
+   private final String COMMENT   = "(\\s*;.*)?";
    
-   private final String op      = "\\s*\\(\\s*"; //open parenthesis
-   private final String cp      = "\\s*\\)\\s*"; //close parenthesis
+   private final String OP = "\\s*\\(\\s*"; //open parenthesis
+   private final String CP = "\\s*\\)\\s*"; //close parenthesis
    
-   private final Pattern rType      = Pattern.compile(optLabel+opCode+reg+comma+reg+comma+reg+comment);
-   private final Pattern loadStore  = Pattern.compile(optLabel+opCode+reg+comma+word+op+reg+cp+comment);
-   private final Pattern data       = Pattern.compile(label+"\\."+word+"\\s+"+word);
+   private final Pattern R_TYPE     = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+REG+COMMA+REG+COMMENT);
+   private final Pattern LOAD_STORE = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+WORD+OP+REG+CP+COMMENT);
+   private final Pattern BNE        = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+REG+COMMA+WORD+COMMENT);
+   private final Pattern BC         = Pattern.compile(OPT_LABEL+OP_CODE+WORD+COMMENT);
+   private final Pattern DATA       = Pattern.compile(LABEL+"\\."+WORD+"\\s+"+WORD);
    
    public void test(){
-      printResults(data, new String[]{
-         "b: .byte 0x23",
-         "   s:    .word16   1337",
-         "word: .word32     0xABCDEF01",
-         "asdf64: .word64 1"
-      });
+     printResults(BC, new String[]{
+        "label: bc labelTo ;Comment",
+        "label: bc labelTo;Comment",
+        "bc labl;Comment",
+        "bc invalid, invalid2",
+        "bc invalid, invalid2;comment",
+        "invalid"
+     });      
+      
+//      printResults(bne, new String[]{
+//         "label: bne   r1, r2, label2  ;comment",
+//         "    bne r1,r2,destination;comment  ",
+//         "bne r1, r2, destination ;comment",
+//         "invalid"
+//      });
+//      printResults(data, new String[]{
+//         "b: .byte 0x23",
+//         "   s:    .word16   1337",
+//         "word: .word32     0xABCDEF01",
+//         "asdf64: .word64 1"
+//      });
       
 //      printResults(rType, new String[]{
 //         "  label:    O2R    R4, R31,R5    ;Test",
