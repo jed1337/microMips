@@ -49,7 +49,7 @@ public class Storage {
             for (int i = 0; i < converted.length; i++) {
                 int currAddr = (address - dataSegmentStart) + (converted.length - 1) - i;
                 dataSegment[currAddr] = converted[i];
-                System.out.println("At address " + Integer.toHexString(address + (converted.length - 1) - i) + ":" + String.format("%02x", converted[i]));
+                //System.out.println("At address " + Integer.toHexString(address + (converted.length - 1) - i) + ":" + String.format("%02x", converted[i]));
             }
         }
 
