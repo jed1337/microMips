@@ -31,4 +31,16 @@ public class UtilityFunctions {
         return opCode;
     }
     
+    public static String to32BitHexString(int val){
+        return String.format("%08x", val);
+    }
+    
+    public static String to64BitHexString(int val){
+        return String.format("%016x", (long)val);
+    }
+
+    public static String to64BitHexString(long val){
+        return String.format("%016x", val);
+    }
+    
 }
