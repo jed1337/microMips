@@ -1,6 +1,6 @@
 #MicroMips  
 
-This case project, implements a simulator for a simplified MIPS64 processor.  
+This case project implements a simulator for a simplified MIPS64 processor.  
 
 ##Functionalities  
 * R-type instructions
@@ -23,9 +23,11 @@ This case project, implements a simulator for a simplified MIPS64 processor.
 * Invalid register
 	* Missing registers
 	* Too many registers
+	* Reg>31
 * Invalid label
 	* Label not found
 	* Label already exists
+	* Invalid label syntax
 * Out of bounds
 	* Jump address is out of bounds
 	* Data address is out of bounds
