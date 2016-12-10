@@ -7,14 +7,14 @@ import utilities.MipsException;
 public class Storage {
    private static final long[] registers = new long[31];
 
-   private static final byte[] programSegment = new byte[8191];
-   private static final byte[] dataSegment = new byte[8191];
+   private final static byte[] codeSegment = new byte[8191];
+   private final static byte[] dataSegment = new byte[8191];
 
-   private static final int programSegmentStart = 0x1000;
-   private static final int programSegmentEnd = 0x2FFF;
+   private final static int codeSegmentStart = 0x1000;
+   private final static int codeSegmentEnd = 0x2FFF;
 
-   private static final int dataSegmentStart = 0x3000;
-   private static final int dataSegmentEnd = 0x4FFF;
+   private final static int dataSegmentStart = 0x3000;
+   private final static int dataSegmentEnd = 0x4FFF;
 
    private static byte[] longToBytes(long x) {
       ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -41,9 +41,22 @@ public class Storage {
       } else {
          return 0;
       }
+   }   
+   
+   private static byte[] intToBytes(int x) {
+      ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+      buffer.putInt(x);
+      return buffer.array();
    }
 
-   public static void storeDouble(int address, long val) {
+   private static int bytesToInt(byte[] bytes) {
+      ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+      buffer.put(bytes);
+      buffer.flip();
+      return buffer.getInt();
+   }
+
+   public static void memoryStoreDouble(int address, long val) {
       validateAddress(address);
       byte[] converted = Storage.longToBytes(val);
 
@@ -54,7 +67,7 @@ public class Storage {
       }
    }
 
-   public static long loadDouble(int address) {
+   public static long memoryLoadDouble(int address) {
       validateAddress(address);
       byte[] loaded = new byte[8];
 
@@ -66,14 +79,43 @@ public class Storage {
 
       return Storage.bytesToLong(loaded);
    }
-   
-   private static void validateAddress(int address){
-      if(address%8 != 0){
-         Errors.addRuntimeError("Allignment error. "+address+" is not aligned to 8 bytes");
+
+   private static void validateAddress(int address) {
+      if (address % 8 != 0) {
+         Errors.addRuntimeError("Allignment error. " + address + " is not aligned to 8 bytes");
       }
-      if(address<dataSegmentStart || address>(dataSegmentEnd - 0x8)){
-         Errors.addRuntimeError(address+" is an invalid access for the data segment.\n"
-           + "Valid values are from 0x3000 to 0x4FFF");
+      if (address < dataSegmentStart || address > (dataSegmentEnd - 0x8)) {
+         Errors.addRuntimeError(address + " is an invalid access for the data segment.\n"
+                 + "Valid values are from 0x3000 to 0x4FFF");
       }
    }
+
+   public static void programStoreWord(int address, int val) {
+      if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
+         byte[] converted = Storage.intToBytes(val);
+
+         for (int i = 0; i < converted.length; i++) {
+            int currAddr = (address - codeSegmentStart) + (converted.length - 1) - i;
+            codeSegment[currAddr] = converted[i];
+            //System.out.println("At address " + Integer.toHexString(address + (converted.length - 1) - i) + ":" + String.format("%02x", converted[i]));
+         }
+      }
+   }
+
+   public static int programLoadWord(int address) {
+      if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
+         byte[] loaded = new byte[4];
+
+         for (int i = 0; i < 4; i++) {
+            int currAddr = (address - codeSegmentStart) + (loaded.length - 1) - i;
+            loaded[i] = codeSegment[currAddr];
+            //System.out.println("At address " + Integer.toHexString(address + (loaded.length - 1) - i) + ":" + String.format("%02x", loaded[i]));
+         }
+
+         return Storage.bytesToInt(loaded);
+      } else {
+         return 0;
+      }
+   }
+
 }
