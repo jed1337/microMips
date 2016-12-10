@@ -4,16 +4,16 @@ import java.nio.ByteBuffer;
 
 public class Storage {
 
-    private static long[] registers = new long[31];
+    private final static long[] registers = new long[31];
 
-    private static byte[] programSegment = new byte[8191];
-    private static byte[] dataSegment = new byte[8191];
+    private final static byte[] codeSegment = new byte[8191];
+    private final static byte[] dataSegment = new byte[8191];
 
-    private static int programSegmentStart = 0x1000;
-    private static int programSegmentEnd = 0x2FFF;
+    private final static int codeSegmentStart = 0x1000;
+    private final static int codeSegmentEnd = 0x2FFF;
 
-    private static int dataSegmentStart = 0x3000;
-    private static int dataSegmentEnd = 0x4FFF;
+    private final static int dataSegmentStart = 0x3000;
+    private final static int dataSegmentEnd = 0x4FFF;
 
     private static byte[] longToBytes(long x) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -28,6 +28,19 @@ public class Storage {
         return buffer.getLong();
     }
 
+    private static byte[] intToBytes(int x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(x);
+        return buffer.array();
+    }
+
+    private static int bytesToInt(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.put(bytes);
+        buffer.flip();
+        return buffer.getInt();
+    }
+    
     public static void storeRegisterValue(int loc, long val) {
         if (loc > 0 && loc < 32) {
             Storage.registers[loc - 1] = val;
@@ -42,7 +55,7 @@ public class Storage {
         }
     }
 
-    public static void storeDouble(int address, long val) {
+    public static void memoryStoreDouble(int address, long val) {
         if (dataSegmentStart <= address && address <= (dataSegmentEnd - 0x8)) {
             byte[] converted = Storage.longToBytes(val);
 
@@ -55,7 +68,7 @@ public class Storage {
 
     }
 
-    public static long loadDouble(int address) {
+    public static long memoryLoadDouble(int address) {
         if (dataSegmentStart <= address && address <= (dataSegmentEnd - 0x8)) {
             byte[] loaded = new byte[8];
 
@@ -72,4 +85,32 @@ public class Storage {
 
     }
 
+    public static void programStoreWord(int address, int val){
+        if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
+            byte[] converted = Storage.intToBytes(val);
+
+            for (int i = 0; i < converted.length; i++) {
+                int currAddr = (address - codeSegmentStart) + (converted.length - 1) - i;
+                codeSegment[currAddr] = converted[i];
+                //System.out.println("At address " + Integer.toHexString(address + (converted.length - 1) - i) + ":" + String.format("%02x", converted[i]));
+            }
+        }
+    }
+    
+    public static int programLoadWord(int address){
+         if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
+            byte[] loaded = new byte[4];
+
+            for (int i = 0; i < 4; i++) {
+                int currAddr = (address - codeSegmentStart) + (loaded.length - 1) - i;
+                loaded[i] = codeSegment[currAddr];
+                //System.out.println("At address " + Integer.toHexString(address + (loaded.length - 1) - i) + ":" + String.format("%02x", loaded[i]));
+            }
+
+            return Storage.bytesToInt(loaded);
+        } else {
+            return 0;
+        }
+    }
+    
 }
