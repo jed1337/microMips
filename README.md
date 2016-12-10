@@ -1,25 +1,34 @@
 #MicroMips  
 
-This case project, implements a simulator for a simplified MIPS64 processor.  
+This case project implements a simulator for a simplified MIPS64 processor.  
 
 ##Functionalities  
 * R-type instructions
-	* OR
-	* DSUB
+	* XOR
+	* DSUBU
 	* SLT
 	* NOP
 * I-type instructions
-	* BNE
+	* BEQC
 	* LD
 	* SD
 	* DADDIU
 * J-type instruction
-	* J
+	* BC
 
-##Errors
-	* Invalid code
-	* Wrong syntax
-		* Missing registers
+##Errors supported
+* Invalid instruction
+	* The opcode doesn't exist
+	* Invalid syntax
+* Invalid register
+	* Missing registers
+	* Too many registers
+	* Reg>31
+* Invalid label
 	* Label not found
 	* Label already exists
-	* Invalid data
+	* Invalid label syntax
+* Out of bounds
+	* Jump address is out of bounds
+	* Data address is out of bounds
+	* Goto memory is out of bounds
