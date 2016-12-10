@@ -1,5 +1,6 @@
+package utilityTests;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -7,30 +8,34 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utilities.AssemblyRegex;
+import utilities.AssemblyRegex;
 import utilities.INSTRUCTION_CONTENTS;
 
 import static org.junit.Assert.*;
+import utilities.Errors;
+import utilities.Errors;
+import utilities.INSTRUCTION_CONTENTS;
 import static utilities.INSTRUCTION_CONTENTS.*;
 
 public class TestRegex {
    private AssemblyRegex ar;
-   private HashMap<String, EnumMap<INSTRUCTION_CONTENTS, String>> invalidInputs;
+   private ArrayList<String> parsingError;
    private HashMap<String, EnumMap<INSTRUCTION_CONTENTS, String>> validInputs;
    
    private INSTRUCTION_CONTENTS[] ica; //Instruction contents format
 
    @Before
    public void setUp() {
-      invalidInputs = new HashMap<>();
+      parsingError = new ArrayList<>();
       validInputs = new HashMap<>();
    }
 
    @After
    public void tearDown() {
       ar = null;
-      invalidInputs = null;
-      validInputs   = null;
-      ica           = null;
+      parsingError = null;
+      validInputs  = null;
+      ica          = null;
    }
    
    private void setIContentsFormat(INSTRUCTION_CONTENTS... ica){
@@ -54,12 +59,14 @@ public class TestRegex {
    }
    
    public void test(){
-//      invalidInputs.forEach((k,v)->{
-//         assertEquals(v, ar.getMatchedGroups(pattern, k));
-//      });
       validInputs.forEach((k,v)->{
          ar = new AssemblyRegex(k);
          assertEquals(ar.getInstructionContents(), v);
+      });
+      parsingError.forEach(str->{
+         ar = new AssemblyRegex(str);
+         assertTrue(!Errors.getParsingErrors().isEmpty());
+         assertTrue(Errors.getRuntimeErrors().isEmpty());
       });
    }
    
@@ -74,6 +81,11 @@ public class TestRegex {
          "               DSUBU r0, r0, r0;            newline",
          getEM(null,"DSUBU", "r0", "r0", "r0",";            newline")
       );
+      parsingError.add("               DSUBUr0, r0, r0;            newline");
+      parsingError.add("Label:DSUBU r0, r0, r0;            newline");
+      parsingError.add("Label:DSUBU r0, r0, r0");
+      parsingError.add("Label: DSUBU r0, r0, 0x1");
+      parsingError.add("Label: DSUBU r0, r0, 1");
       test();
    }
 
@@ -96,6 +108,13 @@ public class TestRegex {
         "ld r1,0(r0);comment",
         getEM(null,"ld","r1","0","r0",";comment")
      );
+     parsingError.add("ldr1,0(r0);comment");
+     parsingError.add("ldr1,0(r0) comment");
+     parsingError.add("l dr1,0(r0) comment");
+     parsingError.add("ld r1,0(r0) comment");
+     parsingError.add("ld r1,0xf(r0); comment");
+     parsingError.add("ld r1,0xcafe(r1)");
+     parsingError.add("label:ld r1,cafe(r1)");
      test();
   }
 
@@ -114,6 +133,14 @@ public class TestRegex {
         "Beqc r1, r2, stuff ;comment",
         getEM(null, "Beqc", "r1", "r2", "stuff", ";comment")
      );
+     parsingError.add("Beqcr1, r2, stuff ;comment");
+     parsingError.add("label:Beqc r1, r2, stuff ;comment");
+     parsingError.add("label: Beqc r1, r2 stuff ;comment");
+     parsingError.add("label: Beqc r1, r2; stuff ;comment");
+     parsingError.add("label: Beqc r1, r2,; stuff ;comment");
+     parsingError.add("label: Beqc r1, r2 ");
+     parsingError.add("label: Beqc r1, r2, r4, r5 ");
+     parsingError.add("Beqc r1, r2, r4, r5 ");
      test();
   }
 
@@ -132,6 +159,10 @@ public class TestRegex {
         "bc labl;Comment",
         getEM(null, "bc", "labl", ";Comment")
      );
+     parsingError.add("bc labl;Comment");
+     parsingError.add("bc labl, label2;Comment");
+     parsingError.add("lbl:bc labl, label2");
+     parsingError.add("bc2 labl, label2");
      test();
   }
 }
