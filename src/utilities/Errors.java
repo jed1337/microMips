@@ -3,26 +3,22 @@ package utilities;
 import java.util.ArrayList;
 
 public class Errors {
-   private static Errors instance = null;
-   
-   private final ArrayList<mipsException> mipsExceptions;
-   
-   public static Errors getInstance(){
-      if (instance == null) {
-         instance = new Errors();
-      } 
-      return instance;
-   }
-   
-   private Errors(){
-      mipsExceptions = new ArrayList<>();
-   }
-   
-   public void addException(mipsException me){
-      instance.addException(me);
+   private static final ArrayList<MipsException> parsingErrors = new ArrayList<>();
+   private static final ArrayList<MipsException> runtimeErrors = new ArrayList<>();
+
+   public static void addParsingError(String instruction, String message){
+      Errors.parsingErrors.add(new MipsException(instruction, message));
    }
 
-   public ArrayList<mipsException> getMipsExceptions() {
-      return mipsExceptions;
+   public static ArrayList<MipsException> getParsingErrors() {
+      return Errors.parsingErrors;
+   }
+
+   public static void addRuntimeError(String message){
+      Errors.runtimeErrors.add(new MipsException(message));
+   }
+
+   public static ArrayList<MipsException> getRuntimeErrors() {
+      return runtimeErrors;
    }
 }
