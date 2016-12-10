@@ -14,8 +14,8 @@ public class Test {
 //         "label:  ld r1, 1000(r23) ;Test"
 //           "nop"
 //           "daddiu r1, r2, 0x3"
-//           "beQc r1, r2, label"
-           "bc jump"
+           "beQc r1, r2, label"
+//           "bc jump"
       );
    }
 }

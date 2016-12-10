@@ -17,7 +17,8 @@ public class AssemblyRegex {
    private String input;
    private String origInput;
    private Matcher matcher;
-   private final EnumMap<INSTRUCTION_CONTENTS, String> iContents = new EnumMap<>(INSTRUCTION_CONTENTS.class);
+   private final EnumMap<INSTRUCTION_CONTENTS, String> instructionContents 
+      = new EnumMap<>(INSTRUCTION_CONTENTS.class);
    
    public AssemblyRegex(String input){
       this.input = input;
@@ -30,7 +31,7 @@ public class AssemblyRegex {
       setAndRemove(LABEL, INSTRUCTION_CONTENTS.LABEL, false);
       setAndRemove(OPCODE, INSTRUCTION_CONTENTS.OPCODE);
       
-      INSTRUCTION instruction = INSTRUCTION.getInstruction(iContents.get(INSTRUCTION_CONTENTS.OPCODE));
+      INSTRUCTION instruction = INSTRUCTION.getInstruction(instructionContents.get(INSTRUCTION_CONTENTS.OPCODE));
       if (instruction == null) {
          System.err.println("INVALID");
          //add mips exception here
@@ -86,7 +87,7 @@ public class AssemblyRegex {
    public void setAndRemoveComments(){
       int sIndex = this.input.indexOf(';');
       if(sIndex != -1){
-         iContents.put(INSTRUCTION_CONTENTS.COMMENT, this.input.substring(sIndex));
+         instructionContents.put(INSTRUCTION_CONTENTS.COMMENT, this.input.substring(sIndex).trim());
          this.input = this.input.substring(0, sIndex).trim();
       }
    }
@@ -94,9 +95,11 @@ public class AssemblyRegex {
    private void remove(Pattern pattern){
       setAndRemove(pattern, null);
    }
+   
    private void setAndRemove(Pattern pattern, INSTRUCTION_CONTENTS content) {
       setAndRemove(pattern, content, true);
    }
+
    private void setAndRemove(Pattern pattern, INSTRUCTION_CONTENTS content, boolean required) {
       matcher = pattern.matcher(this.input);
       if(matcher.find()){
@@ -106,7 +109,7 @@ public class AssemblyRegex {
                +this.input.substring(0, matcher.start(1)));
          }
          if(content != null){ //From the remove instruction. Most likely violates OOP
-            iContents.put(content, matcher.group(1).trim());
+            instructionContents.put(content, matcher.group(1).trim());
          }
          this.input = this.input.substring(matcher.end(1));
       }else if(required){
@@ -114,5 +117,9 @@ public class AssemblyRegex {
          System.err.println("You missed "+pattern);
       }
       this.input = input.trim();
+   }
+
+   public EnumMap<INSTRUCTION_CONTENTS, String> getInstructionContents() {
+      return instructionContents;
    }
 }
