@@ -51,7 +51,6 @@ public class Storage {
       }
    }
 
-   
    public static void storeRegisterValue(int loc, long val) {
       if (loc > 0 && loc < 32) {
          Storage.registers[loc - 1] = val;

@@ -1,6 +1,6 @@
 package utilities;
 
-public enum INSTRUCTION {
+public enum INSTRUCTION_TYPE {
 
     XOR("XOR", new int[]{16, 6, 11}, new int[]{5, 5, 5}), 
     DSUBU("DSUBU", new int[]{16, 6, 11}, new int[]{5, 5, 5}),
@@ -16,8 +16,8 @@ public enum INSTRUCTION {
     private final int[] argPos;
     private final int[] argLengths;  
     
-    public static INSTRUCTION getInstruction(String instruction){
-        for(INSTRUCTION i: values()){
+    public static INSTRUCTION_TYPE getInstructionType(String instruction){
+        for(INSTRUCTION_TYPE i: values()){
             if(i.opCode.equalsIgnoreCase(instruction)){
                 return i;
             }
@@ -25,7 +25,7 @@ public enum INSTRUCTION {
         return null;
     }
     
-    private INSTRUCTION(String opCode, int[] argPos, int[] argLengths){
+    private INSTRUCTION_TYPE(String opCode, int[] argPos, int[] argLengths){
         this.opCode = opCode;
         this.argPos = argPos;
         this.argLengths = argLengths;

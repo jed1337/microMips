@@ -31,7 +31,7 @@ public class AssemblyRegex {
       setAndRemove(P_LABEL, INSTRUCTION_CONTENTS.LABEL, false);
       setAndRemove(P_OPCODE, INSTRUCTION_CONTENTS.OPCODE);
       
-      INSTRUCTION instruction = INSTRUCTION.getInstruction(instructionContents.get(INSTRUCTION_CONTENTS.OPCODE));
+      INSTRUCTION_TYPE instruction = INSTRUCTION_TYPE.getInstructionType(instructionContents.get(INSTRUCTION_CONTENTS.OPCODE));
       if (instruction == null) {
          System.err.println("INVALID");
          Errors.addParsingError(origInput, "The opcode is invalid");

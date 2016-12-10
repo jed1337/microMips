@@ -17,7 +17,7 @@ public class UtilityFunctions {
 
     public static int getOpCode(String instruction, int[] args) {
 
-        INSTRUCTION in = INSTRUCTION.getInstruction(instruction);
+        INSTRUCTION_TYPE in = INSTRUCTION_TYPE.getInstructionType(instruction);
         int[] posArray = in.getArgPos();
         int[] lengthArray = in.getArgLengths();
         int opCode = in.getInstructionFormat();
