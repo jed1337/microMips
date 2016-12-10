@@ -2,7 +2,6 @@ package models;
 
 import java.nio.ByteBuffer;
 import utilities.Errors;
-import utilities.MipsException;
 
 public class Storage {
    private static final long[] registers = new long[31];
@@ -28,21 +27,7 @@ public class Storage {
       buffer.flip();
       return buffer.getLong();
    }
-
-   public static void storeRegisterValue(int loc, long val) {
-      if (loc > 0 && loc < 32) {
-         Storage.registers[loc - 1] = val;
-      }
-   }
-
-   public static long getRegisterValue(int loc) {
-      if (loc > 0 && loc < 32) {
-         return Storage.registers[loc - 1];
-      } else {
-         return 0;
-      }
-   }   
-   
+      
    private static byte[] intToBytes(int x) {
       ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
       buffer.putInt(x);
@@ -56,8 +41,33 @@ public class Storage {
       return buffer.getInt();
    }
 
-   public static void memoryStoreDouble(int address, long val) {
-      validateAddress(address);
+   private static void validateDataAddress(int address) {
+      if (address % 8 != 0) {
+         Errors.addRuntimeError("Alignment error. " + address + " is not aligned to 8 bytes");
+      }
+      if (address < dataSegmentStart || address > (dataSegmentEnd - 0x8)) {
+         Errors.addRuntimeError(address + " is an invalid access for the data segment.\n"
+                 + "Valid values are from 0x3000 to 0x4FFF");
+      }
+   }
+
+   
+   public static void storeRegisterValue(int loc, long val) {
+      if (loc > 0 && loc < 32) {
+         Storage.registers[loc - 1] = val;
+      }
+   }
+
+   public static long getRegisterValue(int loc) {
+      if (loc > 0 && loc < 32) {
+         return Storage.registers[loc - 1];
+      } else {
+         return 0;
+      }
+   }   
+
+   public static void dataStoreDouble(int address, long val) {
+      validateDataAddress(address);
       byte[] converted = Storage.longToBytes(val);
 
       for (int i = 0; i < converted.length; i++) {
@@ -67,8 +77,8 @@ public class Storage {
       }
    }
 
-   public static long memoryLoadDouble(int address) {
-      validateAddress(address);
+   public static long dataLoadDouble(int address) {
+      validateDataAddress(address);
       byte[] loaded = new byte[8];
 
       for (int i = 0; i < 8; i++) {
@@ -79,18 +89,8 @@ public class Storage {
 
       return Storage.bytesToLong(loaded);
    }
-
-   private static void validateAddress(int address) {
-      if (address % 8 != 0) {
-         Errors.addRuntimeError("Allignment error. " + address + " is not aligned to 8 bytes");
-      }
-      if (address < dataSegmentStart || address > (dataSegmentEnd - 0x8)) {
-         Errors.addRuntimeError(address + " is an invalid access for the data segment.\n"
-                 + "Valid values are from 0x3000 to 0x4FFF");
-      }
-   }
-
-   public static void programStoreWord(int address, int val) {
+   
+   public static void codeStoreWord(int address, int val) {
       if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
          byte[] converted = Storage.intToBytes(val);
 
@@ -102,7 +102,7 @@ public class Storage {
       }
    }
 
-   public static int programLoadWord(int address) {
+   public static int codeLoadWord(int address) {
       if (codeSegmentStart <= address && address <= (codeSegmentEnd - 0x4)) {
          byte[] loaded = new byte[4];
 
