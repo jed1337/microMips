@@ -1,60 +1,125 @@
 package utilities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AssemblyRegex {
-   private final String LABEL     = "\\s*(\\w+:\\s+)";
-   private final String OPT_LABEL = LABEL+"?";   // optional label
-   private final String WORD      = "(\\w+)";
-   private final String DATA_WORD = "(\\.\\w+)";
-   private final String OP_CODE   = WORD+"\\s+";
-   private final String REG       = "([rR]\\d{1,2})";
-   private final String COMMA     = "\\s*,\\s*";
-   private final String COMMENT   = "(\\s*;.*)?";
+   private static final Pattern OP     = Pattern.compile("(\\s*\\(\\s*)"); //open parenthesis
+   private static final Pattern CP     = Pattern.compile("(\\s*\\)\\s*)"); //close parenthesis
+   private static final Pattern COMMA  = Pattern.compile("(,)");
+   private static final Pattern WORD   = Pattern.compile("(\\w+)");
+
+   private static final Pattern LABEL  = Pattern.compile("\\s*(\\w+:\\s+)");
+   private static final Pattern OPCODE = Pattern.compile("(\\w+)");
+   private static final Pattern REG    = Pattern.compile("([rR]\\d{1,2})");
    
-   private final String OP = "\\s*\\(\\s*"; //open parenthesis
-   private final String CP = "\\s*\\)\\s*"; //close parenthesis
-   
-   public final Pattern R_TYPE     = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+REG+COMMA+REG+COMMENT);
-   public final Pattern LOAD_STORE = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+WORD+OP+REG+CP+COMMENT);
-   public final Pattern BNE        = Pattern.compile(OPT_LABEL+OP_CODE+REG+COMMA+REG+COMMA+WORD+COMMENT);
-   public final Pattern BC         = Pattern.compile(OPT_LABEL+OP_CODE+WORD+COMMENT);
-   public final Pattern DATA       = Pattern.compile(LABEL+DATA_WORD+"\\s+"+WORD);
-   
+   private String input;
+   private String origInput;
    private Matcher matcher;
+   private final EnumMap<INSTRUCTION_CONTENTS, String> instructionContents 
+      = new EnumMap<>(INSTRUCTION_CONTENTS.class);
    
-   public void test(){
+   public AssemblyRegex(String input){
+      this.input = input;
+      this.origInput = input;
+      test();
+   }
+
+   private void test() {
+      setAndRemoveComments();
+      setAndRemove(LABEL, INSTRUCTION_CONTENTS.LABEL, false);
+      setAndRemove(OPCODE, INSTRUCTION_CONTENTS.OPCODE);
+      
+      INSTRUCTION instruction = INSTRUCTION.getInstruction(instructionContents.get(INSTRUCTION_CONTENTS.OPCODE));
+      if (instruction == null) {
+         System.err.println("INVALID");
+         //add mips exception here
+      }
+      else{
+         System.out.println("Instruction is: "+instruction);
+         switch(instruction){
+            case XOR:
+            case DSUBU:
+            case SLT:
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RD);
+               remove(COMMA);
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RS);
+               remove(COMMA);
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RT);
+               break;
+            case NOP:
+               break;
+            case LD:
+            case SD:
+               setAndRemove(REG  , INSTRUCTION_CONTENTS.RT);
+               remove(COMMA);
+               setAndRemove(WORD , INSTRUCTION_CONTENTS.IMM);
+               remove(OP);
+               setAndRemove(REG  , INSTRUCTION_CONTENTS.RS);
+               remove(CP);
+               break;
+            case BEQC:
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RS);
+               remove(COMMA);
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RT);
+               remove(COMMA);
+               setAndRemove(WORD , INSTRUCTION_CONTENTS.IMM);
+               break;
+            case DADDIU:
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RT);
+               remove(COMMA);
+               setAndRemove(REG , INSTRUCTION_CONTENTS.RS);
+               remove(COMMA);
+               setAndRemove(WORD , INSTRUCTION_CONTENTS.IMM);
+               break;
+            case BC:
+               setAndRemove(WORD, INSTRUCTION_CONTENTS.IMM);
+               break;
+         }
+         //Add mips exception if input still has contents
+      }
+      if(!input.equals("")){
+         System.err.println("Extraeneous input: "+input);
+      }
    }
    
-   public List<String> getMatchedGroups(Pattern pattern, String input){
-      matcher = pattern.matcher(input);
+   public void setAndRemoveComments(){
+      int sIndex = this.input.indexOf(';');
+      if(sIndex != -1){
+         instructionContents.put(INSTRUCTION_CONTENTS.COMMENT, this.input.substring(sIndex).trim());
+         this.input = this.input.substring(0, sIndex).trim();
+      }
+   }
+   
+   private void remove(Pattern pattern){
+      setAndRemove(pattern, null);
+   }
+   
+   private void setAndRemove(Pattern pattern, INSTRUCTION_CONTENTS content) {
+      setAndRemove(pattern, content, true);
+   }
+
+   private void setAndRemove(Pattern pattern, INSTRUCTION_CONTENTS content, boolean required) {
+      matcher = pattern.matcher(this.input);
       if(matcher.find()){
-         int gc = matcher.groupCount();
-         List<String> sGroups = new ArrayList<>();
-         for (int i = 1; i <= gc; i++) {
-            String mgi =matcher.group(i);
-            sGroups.add(mgi==null? null:mgi.trim());
+         if(matcher.start(1)!=0){
+            //add mips error for has extraeneous input somewhere
+            System.err.println("Extraeneous input: "
+               +this.input.substring(0, matcher.start(1)));
          }
-         return sGroups;
+         if(content != null){ //From the remove instruction. Most likely violates OOP
+            instructionContents.put(content, matcher.group(1).trim());
+         }
+         this.input = this.input.substring(matcher.end(1));
+      }else if(required){
+         //add mips error for missing item
+         System.err.println("You missed "+pattern);
       }
-      return null;
+      this.input = input.trim();
    }
-   
-   private void printResults(Pattern pattern, String[] inputs){
-      System.out.println("\n---"+pattern.toString()+"---");
-      for (String input : inputs) {
-         matcher = pattern.matcher(input);
-         if(matcher.find()){
-            for(int j=0; j<=matcher.groupCount();j++){
-               System.out.printf("Group %d = '%s'\n", j, matcher.group(j));
-            }
-         }else{
-            System.out.println("Not found");
-         }
-         System.out.println("");
-      }
+
+   public EnumMap<INSTRUCTION_CONTENTS, String> getInstructionContents() {
+      return instructionContents;
    }
 }
