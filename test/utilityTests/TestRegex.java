@@ -8,11 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utilities.AssemblyRegex;
-import utilities.AssemblyRegex;
-import utilities.INSTRUCTION_CONTENTS;
 
 import static org.junit.Assert.*;
-import utilities.Errors;
 import utilities.Errors;
 import utilities.INSTRUCTION_CONTENTS;
 import static utilities.INSTRUCTION_CONTENTS.*;
@@ -75,7 +72,7 @@ public class TestRegex {
       setIContentsFormat(LABEL, OPCODE, RD, RS, RT, COMMENT);
       validInputs.put(
          "  label:    xor    R4, R31,R5    ;Test",
-         getEM("label:","xor","R4","R31","R5",";Test")
+         getEM("label","xor","R4","R31","R5",";Test")
       );
       validInputs.put(
          "               DSUBU r0, r0, r0;            newline",
@@ -86,10 +83,10 @@ public class TestRegex {
          getEM(null,"slt", "r0", "r0", "r0",";            newline")
       );
       parsingError.add("               DSUBUr0, r0, r0;            newline");
-      parsingError.add("Label:DSUBU r0, r0, r0;            newline");
-      parsingError.add("Label:DSUBU r0, r0, r0");
-      parsingError.add("Label: DSUBU r0, r0, 0x1");
-      parsingError.add("Label: DSUBU r0, r0, 1");
+      parsingError.add("LabelDSUBU r0, r0, r0;            newline");
+      parsingError.add("LabelDSUBU r0, r0, r0");
+      parsingError.add("Label DSUBU r0, r0, 0x1");
+      parsingError.add("Label DSUBU r0, r0, 1");
       test();
    }
    
@@ -102,7 +99,7 @@ public class TestRegex {
       );
       validInputs.put(
          "       label:        nop;            newline",
-         getEM("label:","nop",";            newline")
+         getEM("label","nop",";            newline")
       );
       validInputs.put(
          "               nop",
@@ -136,7 +133,7 @@ public class TestRegex {
    setIContentsFormat(LABEL, OPCODE, RT, IMM, RS, COMMENT);
      validInputs.put(
         " label:       ld r1, 2000(r0)   ;Comment",
-        getEM("label:","ld","r1","2000","r0",";Comment")
+        getEM("label","ld","r1","2000","r0",";Comment")
      );
      validInputs.put(
         "sd                    r3,2000(r2);",
@@ -167,7 +164,7 @@ public class TestRegex {
    setIContentsFormat(LABEL, OPCODE, RS, RT, IMM, COMMENT);
      validInputs.put(
         "   label: BEQC   r1, r2, label2  ;comment",
-        getEM("label:", "BEQC", "r1", "r2", "label2", ";comment")
+        getEM("label", "BEQC", "r1", "r2", "label2", ";comment")
      );
      validInputs.put(      
         "    beqc r1,r2,destination;comment  ",
@@ -193,11 +190,11 @@ public class TestRegex {
    setIContentsFormat(LABEL, OPCODE, IMM, COMMENT);
      validInputs.put(
         "label: bc labelTo ;Comment",
-        getEM("label:", "bc", "labelTo", ";Comment")
+        getEM("label", "bc", "labelTo", ";Comment")
      );
      validInputs.put(
         "label: bc labelTo;Comment",
-        getEM("label:", "bc", "labelTo", ";Comment")
+        getEM("label", "bc", "labelTo", ";Comment")
      );
      validInputs.put(
         "bc labl;Comment",

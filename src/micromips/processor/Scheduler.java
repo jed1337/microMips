@@ -1,7 +1,11 @@
 package micromips.processor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import models.Instruction;
 import models.Modification;
 import utilities.AssemblyRegex;
@@ -9,22 +13,80 @@ import utilities.Errors;
 import utilities.INSTRUCTION_TYPE;
 import utilities.INSTRUCTION_CONTENTS;
 import static utilities.INSTRUCTION_CONTENTS.*;
+import utilities.UtilityFunctions;
 
 public class Scheduler {
    private final ArrayList<Instruction> instructions;
    private final ArrayList<Modification> modifications;
+   private final ArrayList<Integer> opcodes;
 
-   public Scheduler(String jText) {
+   public Scheduler() {
       instructions = new ArrayList<>();
       modifications = new ArrayList<>();
+      opcodes = new ArrayList<>();
+   }
 
-      for (String input : jText.split("\\n")) {
+   public void setInput(String jText){
+      for (String input : jText.split("\n")) {
          AssemblyRegex ar = new AssemblyRegex(input);
          if (!Errors.getParsingErrors().isEmpty()) {
-            //Stop excecution
+            System.err.println(input+" has an error!");
          } else {
             createInstruction(ar.getInstructionContents());
          }
+      }
+   }
+   
+   public void applyModifications(){   
+      hasDuplicateLabel();
+      for (Modification modification : modifications) {
+         int mIndex    = modification.getInstructionIndex();
+         String mLabel = modification.getLabel();
+         
+         boolean labelExists=false;
+         for (int i = 0; i < instructions.size(); i++) {
+            String iLabel = instructions.get(i).getLabel();
+            
+            if(mLabel.equals(iLabel)){
+               labelExists=true;
+               
+               int offset = i-(mIndex+1);
+               instructions.get(modification.getInstructionIndex())
+                  .setArguementAt(modification.getArgumentIndex(), offset);
+               
+               break;
+            }
+         }
+         if(!labelExists){
+            Errors.addParsingError(mLabel, "Is nonexistent");
+         }
+      }         
+      System.out.println("Test end");
+   }
+   
+   public void setOpcodes(){
+      for (Instruction instruction : instructions) {
+         opcodes.add(
+            UtilityFunctions.getOpCode(
+               instruction.getInstructionType()
+               , instruction.getArguments()
+         ));
+      }
+   }
+   
+   private void hasDuplicateLabel(){
+      List<String> iLabels = instructions.stream()
+         .map(ins->ins.getLabel())
+         .filter(Objects::nonNull)
+         .collect(Collectors.toList());
+      
+      int iDitinctSize = iLabels.stream()
+         .distinct()
+         .collect(Collectors.toList())
+         .size();
+      
+      if(iLabels.size()!=iDitinctSize){
+         Errors.addParsingError(Arrays.toString(iLabels.toArray()), "Contains duplicate labels");
       }
    }
 
@@ -65,14 +127,14 @@ public class Scheduler {
                ics.get(RT),
                "0"
             )));
-            modifications.add(new Modification(instructions.size()-1, ics.get(IMM), 3));
+            modifications.add(new Modification(instructions.size()-1, ics.get(IMM), 2));
             //Add modification
             break;
          case BC:
             instructions.add(new Instruction(inType, ics.get(LABEL), getInArgs(
                "0"
             )));
-            modifications.add(new Modification(instructions.size()-1, ics.get(IMM), 1));
+            modifications.add(new Modification(instructions.size()-1, ics.get(IMM), 0));
             break;
       }
       return instruction;
@@ -94,4 +156,5 @@ public class Scheduler {
       }
       return args;
    }
+
 }

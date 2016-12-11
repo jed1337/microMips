@@ -11,7 +11,7 @@ public class AssemblyRegex {
    private static final Pattern P_WORD   = Pattern.compile("(\\w+)");
    private static final Pattern P_IMM    = Pattern.compile("(\\d{1,4})");
 
-   private static final Pattern P_LABEL  = Pattern.compile("\\s*(\\w+:\\s+)");
+   private static final Pattern P_LABEL  = Pattern.compile("\\s*(\\w+)(:)\\s+");
    private static final Pattern P_OPCODE = Pattern.compile("(\\w+)");
    private static final Pattern P_REG    = Pattern.compile("([rR]\\d{1,2})");
    
@@ -22,14 +22,12 @@ public class AssemblyRegex {
       = new EnumMap<>(INSTRUCTION_CONTENTS.class);
    
    public AssemblyRegex(String input){
-      this.input = input;
-      this.origInput = input;
-      test();
-   }
+      this.input = input.replaceAll("\t", "").trim();
+      this.origInput = this.input;
 
-   private void test() {
       setAndRemoveComments();
       setAndRemove(P_LABEL, INSTRUCTION_CONTENTS.LABEL, false);
+      removeColon();
       setAndRemove(P_OPCODE, INSTRUCTION_CONTENTS.OPCODE);
       
       INSTRUCTION_TYPE instruction = INSTRUCTION_TYPE.getInstructionType(instructionContents.get(INSTRUCTION_CONTENTS.OPCODE));
@@ -79,12 +77,18 @@ public class AssemblyRegex {
                break;
          }
       }
-      if(!input.equals("")){
+      if(!this.input.isEmpty()){
          Errors.addParsingError(origInput, "Contains extraeneous input");
       }
    }
    
-   public void setAndRemoveComments(){
+   private void removeColon(){
+      if(this.input.startsWith(":")){
+         this.input = this.input.substring(1).trim();
+      }
+   }
+   
+   private void setAndRemoveComments(){
       int sIndex = this.input.indexOf(';');
       if(sIndex != -1){
          instructionContents.put(INSTRUCTION_CONTENTS.COMMENT, this.input.substring(sIndex).trim());
