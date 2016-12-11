@@ -5,7 +5,7 @@ import utilities.INSTRUCTION_TYPE;
 public class Instruction {
    private final INSTRUCTION_TYPE instructionType;
    private final String label;
-   private final int[] argument;
+   private int[] argument;
 
    public Instruction(INSTRUCTION_TYPE instructionType, String label, int[] argument) {
       this.instructionType = instructionType;
@@ -21,7 +21,11 @@ public class Instruction {
       return label;
    }
 
-   public int[] getArgument() {
+   public int[] getArguments() {
       return argument;
+   }
+   
+   public void setArguementAt(int index, int value){
+      this.argument[index] = value;
    }
 }

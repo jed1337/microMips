@@ -8,11 +8,13 @@ public class Test {
 
       Scheduler scheduler = new Scheduler();
       scheduler.setInput(
-         "XOR r1, r2, r3	" +"\n"+
-         "DSUBU r4, r5, r6      " +"\n"+
-         "SLT r7, r8, r9	" +"\n"+
-         "NOP 			" +"\n"+
-         "label: NOP 		" +"\n"
+         "BEQC r11, r12, label      " +"\n"+
+         "LD r1, 1000(r3)	" +"\n"+
+         "SD r7, 1000(r9)	" +"\n"+
+         " NOP 		" +"\n"+
+         "label: DADDIU r1, r2, 1000			" +"\n"
       );
+      scheduler.applyModifications();
+      scheduler.setOpcodes();
    }
 }
