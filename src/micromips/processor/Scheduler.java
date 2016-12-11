@@ -157,4 +157,15 @@ public class Scheduler {
       return args;
    }
 
+   public ArrayList<Instruction> getInstructions() {
+      return instructions;
+   }
+
+   public ArrayList<Modification> getModifications() {
+      return modifications;
+   }
+   
+   public ArrayList<Integer> getOpcodes() {
+      return opcodes;
+   }
 }
