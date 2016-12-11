@@ -81,12 +81,54 @@ public class TestRegex {
          "               DSUBU r0, r0, r0;            newline",
          getEM(null,"DSUBU", "r0", "r0", "r0",";            newline")
       );
+      validInputs.put(
+         "               slt r0, r0, r0;            newline",
+         getEM(null,"slt", "r0", "r0", "r0",";            newline")
+      );
       parsingError.add("               DSUBUr0, r0, r0;            newline");
       parsingError.add("Label:DSUBU r0, r0, r0;            newline");
       parsingError.add("Label:DSUBU r0, r0, r0");
       parsingError.add("Label: DSUBU r0, r0, 0x1");
       parsingError.add("Label: DSUBU r0, r0, 1");
       test();
+   }
+   
+   @Test
+   public void nop(){
+      setIContentsFormat(LABEL, OPCODE, COMMENT);
+      validInputs.put(
+         "               nop;            newline",
+         getEM(null,"nop",";            newline")
+      );
+      validInputs.put(
+         "       label:        nop;            newline",
+         getEM("label:","nop",";            newline")
+      );
+      validInputs.put(
+         "               nop",
+         getEM(null,"nop",null)
+      );
+      parsingError.add("               nop, r1");
+      parsingError.add("               nop, r1, r2");
+      parsingError.add("               label:nop");
+   }
+   
+   @Test
+   public void daddiu(){
+      setIContentsFormat(LABEL, OPCODE, RT, RS, IMM, COMMENT);
+      validInputs.put(
+         "               daddiu r0, r0, 1234;            newline",
+         getEM(null,"daddiu", "r0", "r0", "1234",";            newline")
+      );
+      validInputs.put(
+         "               daddiu r0, r0, 1234",
+         getEM(null,"daddiu", "r0", "r0", "1234",";            newline")
+      );
+      parsingError.add("               daddiu r0, r0;, 1234");
+      parsingError.add("               DSUBUr0, r0, r0;            newline");
+      parsingError.add("               DSUBU r0, r0, 12345;            newline");
+      parsingError.add("               DSUBU r0, r0, 123456;            newline");
+      parsingError.add("               DSUBU r0, r0, ;            newline");
    }
 
   @Test
@@ -101,8 +143,8 @@ public class TestRegex {
         getEM(null,"sd","r3","2000","r2",";")
      );
      validInputs.put(
-        " sd r3      , label           (r1)",
-        getEM(null,"sd","r3","label","r1",null)
+        " sd r3      , 0           (r1)",
+        getEM(null,"sd","r3","0","r1",null)
      );
      validInputs.put(
         "ld r1,0(r0);comment",
@@ -112,6 +154,8 @@ public class TestRegex {
      parsingError.add("ldr1,0(r0) comment");
      parsingError.add("l dr1,0(r0) comment");
      parsingError.add("ld r1,0(r0) comment");
+     parsingError.add("ld r1,LABEL(r0) comment");
+     parsingError.add("ld r1, LABEL(r0) comment");
      parsingError.add("ld r1,0xf(r0); comment");
      parsingError.add("ld r1,0xcafe(r1)");
      parsingError.add("label:ld r1,cafe(r1)");
@@ -119,7 +163,7 @@ public class TestRegex {
   }
 
   @Test
-  public void bne(){
+  public void beqc(){
    setIContentsFormat(LABEL, OPCODE, RS, RT, IMM, COMMENT);
      validInputs.put(
         "   label: BEQC   r1, r2, label2  ;comment",
