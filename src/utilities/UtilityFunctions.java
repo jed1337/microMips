@@ -31,6 +31,17 @@ public class UtilityFunctions {
         return opCode;
     }
     
+    public static String to32BitBinString(int val){
+        String s = Integer.toBinaryString(val);
+        int numPadding = 32 - s.length();
+        while(numPadding > 0){
+            s = '0' + s;
+            numPadding--;
+        }
+        
+        return s;
+    }
+    
     public static String to32BitHexString(int val){
         return String.format("%08x", val);
     }

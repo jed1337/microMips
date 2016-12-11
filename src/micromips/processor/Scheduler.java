@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import models.Instruction;
 import models.Modification;
+import models.Storage;
 import utilities.AssemblyRegex;
 import utilities.Errors;
 import utilities.INSTRUCTION_TYPE;
@@ -20,6 +21,14 @@ public class Scheduler {
    private final ArrayList<Modification> modifications;
    private final ArrayList<Integer> opcodes;
 
+   private int index_WB = -1;
+   private int index_MEM = -1;
+   private int index_EX = -1;
+   private int index_ID = -1;
+   private int index_IF = -1;
+   
+   private int endPC = 0x1000;
+   
    public Scheduler() {
       instructions = new ArrayList<>();
       modifications = new ArrayList<>();
@@ -72,6 +81,16 @@ public class Scheduler {
                , instruction.getArguments()
          ));
       }
+   }
+   
+   public void storeOpcodes(){
+       int addr = 0x1000;
+       for(Integer i: opcodes){
+           Storage.codeStoreWord(addr, i);
+           
+           addr += 0x4;
+       }
+       endPC = addr;
    }
    
    private void hasDuplicateLabel(){
@@ -157,4 +176,26 @@ public class Scheduler {
       return args;
    }
 
+   public void runOneCycle(){
+       
+       Writeback.writeback();       
+       MemoryAccess.memoryAccess();
+       Execution.execute();
+       InstructionDecode.decode();
+       
+       if(InstructionFetch.PC < endPC){
+            InstructionFetch.fetch();           
+       }
+       
+       InstructionFetch.printContents();
+       InstructionDecode.printContents();
+       Execution.printContents();
+       MemoryAccess.printContents();
+       Writeback.printContents();
+       
+       System.out.println();
+   }
+   
+   
+   
 }
