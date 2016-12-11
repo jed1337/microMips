@@ -75,11 +75,11 @@ public class TestRegex {
       setIContentsFormat(LABEL, OPCODE, RD, RS, RT, COMMENT);
       validInputs.put(
          "  label:    xor    R4, R31,R5    ;Test",
-         getEM("label:","xor","R4","R31","R5",";Test")
+         getEM("label:","xor","4","31","5",";Test")
       );
       validInputs.put(
          "               DSUBU r0, r0, r0;            newline",
-         getEM(null,"DSUBU", "r0", "r0", "r0",";            newline")
+         getEM(null,"DSUBU", "0", "0", "0",";            newline")
       );
       parsingError.add("               DSUBUr0, r0, r0;            newline");
       parsingError.add("Label:DSUBU r0, r0, r0;            newline");
@@ -94,26 +94,26 @@ public class TestRegex {
    setIContentsFormat(LABEL, OPCODE, RT, IMM, RS, COMMENT);
      validInputs.put(
         " label:       ld r1, 2000(r0)   ;Comment",
-        getEM("label:","ld","r1","2000","r0",";Comment")
+        getEM("label:","ld","1","2000","0",";Comment")
      );
      validInputs.put(
         "sd                    r3,2000(r2);",
-        getEM(null,"sd","r3","2000","r2",";")
+        getEM(null,"sd","3","2000","2",";")
      );
      validInputs.put(
         " sd r3      , label           (r1)",
-        getEM(null,"sd","r3","label","r1",null)
+        getEM(null,"sd","3","label","1",null)
      );
      validInputs.put(
         "ld r1,0(r0);comment",
-        getEM(null,"ld","r1","0","r0",";comment")
+        getEM(null,"ld","1","0","0",";comment")
      );
-     parsingError.add("ldr1,0(r0);comment");
-     parsingError.add("ldr1,0(r0) comment");
-     parsingError.add("l dr1,0(r0) comment");
-     parsingError.add("ld r1,0(r0) comment");
-     parsingError.add("ld r1,0xf(r0); comment");
-     parsingError.add("ld r1,0xcafe(r1)");
+     parsingError.add("ld1,0(r0);comment");
+     parsingError.add("ld1,0(r0) comment");
+     parsingError.add("l d1,0(r0) comment");
+     parsingError.add("ld 1,0(r0) comment");
+     parsingError.add("ld 1,0xf(r0); comment");
+     parsingError.add("ld 1,0xcafe(r1)");
      parsingError.add("label:ld r1,cafe(r1)");
      test();
   }
@@ -123,15 +123,15 @@ public class TestRegex {
    setIContentsFormat(LABEL, OPCODE, RS, RT, IMM, COMMENT);
      validInputs.put(
         "   label: BEQC   r1, r2, label2  ;comment",
-        getEM("label:", "BEQC", "r1", "r2", "label2", ";comment")
+        getEM("label:", "BEQC", "1", "2", "label2", ";comment")
      );
      validInputs.put(      
         "    beqc r1,r2,destination;comment  ",
-        getEM(null, "beqc", "r1", "r2", "destination", ";comment")
+        getEM(null, "beqc", "1", "2", "destination", ";comment")
      );
      validInputs.put(      
         "Beqc r1, r2, stuff ;comment",
-        getEM(null, "Beqc", "r1", "r2", "stuff", ";comment")
+        getEM(null, "Beqc", "1", "2", "stuff", ";comment")
      );
      parsingError.add("Beqcr1, r2, stuff ;comment");
      parsingError.add("label:Beqc r1, r2, stuff ;comment");

@@ -12,7 +12,7 @@ public class AssemblyRegex {
 
    private static final Pattern P_LABEL  = Pattern.compile("\\s*(\\w+:\\s+)");
    private static final Pattern P_OPCODE = Pattern.compile("(\\w+)");
-   private static final Pattern P_REG    = Pattern.compile("([rR]\\d{1,2})");
+   private static final Pattern P_REG    = Pattern.compile("[rR](\\d{1,2})");
    
    private String input;
    private String origInput;
