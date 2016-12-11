@@ -15,12 +15,12 @@ public class UtilityFunctions {
         return value;
     }
 
-    public static int getOpCode(String instruction, int[] args) {
+    public static int getOpCode(INSTRUCTION inType, int[] args) {
 
-        INSTRUCTION in = INSTRUCTION.getInstruction(instruction);
-        int[] posArray = in.getArgPos();
-        int[] lengthArray = in.getArgLengths();
-        int opCode = in.getInstructionFormat();
+//        INSTRUCTION in = INSTRUCTION.getInstruction(in);
+        int[] posArray = inType.getArgPos();
+        int[] lengthArray = inType.getArgLengths();
+        int opCode = inType.getInstructionFormat();
 
         if (args.length == posArray.length) {
             for (int i = 0; i < args.length; i++) {

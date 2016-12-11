@@ -1,17 +1,19 @@
 package models;
 
-public class Instruction {
-   private String instructionType;
-   private String label;
-   private int[] argument;
+import utilities.INSTRUCTION;
 
-   public Instruction(String instructionType, String label, int[] argument) {
+public class Instruction {
+   private final INSTRUCTION instructionType;
+   private final String label;
+   private final int[] argument;
+
+   public Instruction(INSTRUCTION instructionType, String label, int[] argument) {
       this.instructionType = instructionType;
       this.label = label;
       this.argument = argument;
    }
 
-   public String getInstructionType() {
+   public INSTRUCTION getInstructionType() {
       return instructionType;
    }
 
@@ -22,6 +24,4 @@ public class Instruction {
    public int[] getArgument() {
       return argument;
    }
-   
-   
 }

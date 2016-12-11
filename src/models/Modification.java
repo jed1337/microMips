@@ -22,6 +22,4 @@ public class Modification {
    public int getArgumentIndex() {
       return argumentIndex;
    }
-   
-   
 }

@@ -9,10 +9,11 @@ public class AssemblyRegex {
    private static final Pattern P_CP     = Pattern.compile("(\\s*\\)\\s*)"); //close parenthesis
    private static final Pattern P_COMMA  = Pattern.compile("(,)");
    private static final Pattern P_WORD   = Pattern.compile("(\\w+)");
+   private static final Pattern P_IMM    = Pattern.compile("(\\d{1,4})");
 
    private static final Pattern P_LABEL  = Pattern.compile("\\s*(\\w+:\\s+)");
    private static final Pattern P_OPCODE = Pattern.compile("(\\w+)");
-   private static final Pattern P_REG    = Pattern.compile("[rR](\\d{1,2})");
+   private static final Pattern P_REG    = Pattern.compile("([rR]\\d{1,2})");
    
    private String input;
    private String origInput;
@@ -54,7 +55,7 @@ public class AssemblyRegex {
             case SD:
                setAndRemove(P_REG  , INSTRUCTION_CONTENTS.RT);
                remove(P_COMMA);
-               setAndRemove(P_WORD , INSTRUCTION_CONTENTS.IMM);
+               setAndRemove(P_IMM , INSTRUCTION_CONTENTS.IMM);
                remove(P_OP);
                setAndRemove(P_REG  , INSTRUCTION_CONTENTS.RS);
                remove(P_CP);
@@ -71,7 +72,7 @@ public class AssemblyRegex {
                remove(P_COMMA);
                setAndRemove(P_REG , INSTRUCTION_CONTENTS.RS);
                remove(P_COMMA);
-               setAndRemove(P_WORD , INSTRUCTION_CONTENTS.IMM);
+               setAndRemove(P_IMM , INSTRUCTION_CONTENTS.IMM);
                break;
             case BC:
                setAndRemove(P_WORD, INSTRUCTION_CONTENTS.IMM);

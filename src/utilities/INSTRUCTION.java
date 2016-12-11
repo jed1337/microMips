@@ -1,7 +1,6 @@
 package utilities;
 
 public enum INSTRUCTION {
-
     XOR("XOR", new int[]{16, 6, 11}, new int[]{5, 5, 5}), 
     DSUBU("DSUBU", new int[]{16, 6, 11}, new int[]{5, 5, 5}),
     SLT("SLT", new int[]{16, 6, 11}, new int[]{5, 5, 5}), 
