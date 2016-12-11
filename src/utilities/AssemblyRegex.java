@@ -22,12 +22,9 @@ public class AssemblyRegex {
       = new EnumMap<>(INSTRUCTION_CONTENTS.class);
    
    public AssemblyRegex(String input){
-      this.input = input;
-      this.origInput = input;
-      test();
-   }
+      this.input = input.replaceAll("\t", "").trim();
+      this.origInput = this.input;
 
-   private void test() {
       setAndRemoveComments();
       setAndRemove(P_LABEL, INSTRUCTION_CONTENTS.LABEL, false);
       setAndRemove(P_OPCODE, INSTRUCTION_CONTENTS.OPCODE);
@@ -79,7 +76,7 @@ public class AssemblyRegex {
                break;
          }
       }
-      if(!input.equals("")){
+      if(!this.input.isEmpty()){
          Errors.addParsingError(origInput, "Contains extraeneous input");
       }
    }

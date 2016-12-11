@@ -14,11 +14,13 @@ public class Scheduler {
    private final ArrayList<Instruction> instructions;
    private final ArrayList<Modification> modifications;
 
-   public Scheduler(String jText) {
+   public Scheduler() {
       instructions = new ArrayList<>();
       modifications = new ArrayList<>();
+   }
 
-      for (String input : jText.split("\\n")) {
+   public void setInput(String jText){
+      for (String input : jText.split("\n")) {
          AssemblyRegex ar = new AssemblyRegex(input);
          if (!Errors.getParsingErrors().isEmpty()) {
             //Stop excecution
@@ -26,6 +28,7 @@ public class Scheduler {
             createInstruction(ar.getInstructionContents());
          }
       }
+      System.out.println("Test end");
    }
 
    private Instruction createInstruction(EnumMap<INSTRUCTION_CONTENTS, String> ics) {

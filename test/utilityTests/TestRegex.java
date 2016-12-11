@@ -8,11 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utilities.AssemblyRegex;
-import utilities.AssemblyRegex;
-import utilities.INSTRUCTION_CONTENTS;
 
 import static org.junit.Assert.*;
-import utilities.Errors;
 import utilities.Errors;
 import utilities.INSTRUCTION_CONTENTS;
 import static utilities.INSTRUCTION_CONTENTS.*;
