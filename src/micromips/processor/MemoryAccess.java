@@ -10,6 +10,8 @@ public class MemoryAccess {
     public static int MEM_WB_IR = 0;
     public static long MEM_WB_ALU_OUTPUT = 0;
     
+    public static long calVal = 0x0;
+    
     public static void memoryAccess(){
         
         MemoryAccess.MEM_WB_ALU_OUTPUT = Execution.EX_MEM_ALU_OUTPUT;

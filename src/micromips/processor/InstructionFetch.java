@@ -8,6 +8,9 @@ public class InstructionFetch {
    public static int IF_ID_IR = 0;
    public static int IF_ID_NPC = 0;
    public static int PC = 0x1000;
+   
+   private static long calA = 0x0;
+   private static long calB = 0x0;
 
    public static void fetch() {
       int oldPC = InstructionFetch.PC;
