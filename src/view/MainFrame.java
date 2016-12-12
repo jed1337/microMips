@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import models.Storage;
+import utilities.UtilityFunctions;
 
 /**
  *
@@ -21,7 +23,11 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
+    
+    DialogClass dialogClass;
+    
     public MainFrame() {
+        dialogClass = new DialogClass(this);
         initComponents();
     }
 
@@ -155,6 +161,20 @@ public class MainFrame extends javax.swing.JFrame {
         for(int i=0;i<32;i++){
             registerModel.addRow(new Object[]{"R" + i, "0000000000000000"});
         }
+
+        registerTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                String memoryAddress = null;
+                if (me.getClickCount() == 2) {
+                    int row = table.rowAtPoint(p);
+                    memoryAddress = (registerTable.getValueAt(row, 0)).toString();
+                    dialogClass.createDialog(memoryAddress, 0, row);
+                    dialogClass.showDialog();
+                }
+            }
+        });
         jScrollPane5.setViewportView(registerTable);
         if (registerTable.getColumnModel().getColumnCount() > 0) {
             registerTable.getColumnModel().getColumn(0).setResizable(false);
@@ -203,18 +223,15 @@ public class MainFrame extends javax.swing.JFrame {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
-                int row = -1;
-                int col = -1;
-                if (me.getClickCount() == 2 && col > 0) {
-                    row = table.rowAtPoint(p);
-                    col = table.columnAtPoint(p);
-                    valueFrame.setVisible(true);
+                String memoryAddress = null;
+                if (me.getClickCount() == 2) {
+                    int row = table.rowAtPoint(p);
+                    memoryAddress = (memoryTable.getValueAt(row, 0)).toString();
+                    dialogClass.createDialog(memoryAddress, 1, row);
+                    dialogClass.showDialog();
                 }
             }
         });
-
-        this.row = row;
-        this.col = col;
         jScrollPane6.setViewportView(memoryTable);
         if (memoryTable.getColumnModel().getColumnCount() > 0) {
             memoryTable.getColumnModel().getColumn(0).setResizable(false);
@@ -326,16 +343,28 @@ public class MainFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     
-    public int getRow() {
-        return this.row;
+    public String getMemoryAddress() {
+        return this.memoryAddress;
     }
     
-    public int getCol() {
-        return this.col;
-    }
-    
-    public void setValue(int row, int col, String value) {
-        Storage.
+    public void setValue(String memoryAddress, String value, int toggle, int row) {
+        String s = null;
+        
+        //Update view
+        if(toggle == 0) {
+            //register
+            DefaultTableModel model = (DefaultTableModel)registerTable.getModel();
+            Storage.storeRegisterValue(row, Long.parseUnsignedLong(value, 16));
+            s = (UtilityFunctions.to64BitHexString(Storage.getRegisterValue(row))).toUpperCase();
+            model.setValueAt(s, row, 1);
+        }
+        else {
+            //memory
+            DefaultTableModel model = (DefaultTableModel)memoryTable.getModel();
+            Storage.dataStoreDouble(Integer.parseInt(memoryAddress, 16), Long.parseUnsignedLong(value, 16));
+            s = (UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(Integer.parseInt(memoryAddress, 16)))).toUpperCase();
+            model.setValueAt(s, row, 1);
+        }
     }
 
     public static void main(String args[]) {
@@ -361,7 +390,7 @@ public class MainFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+      
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -369,34 +398,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
-    
-    /*public class MyCellEditor extends AbstractCellEditor implements TableCellEditor {
-        private static final long serialVersionUID = 1L;
-    
-        @Override
-        public boolean isCellEditable(EventObject e) {
-            if (super.isCellEditable(e)) {
-                if (e instanceof MouseEvent) {
-                    MouseEvent me = (MouseEvent) e;
-                    return me.getClickCount() >= 2;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return dummyText.getText();
-            //return "Test";
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            dummyText.setFont(table.getFont());
-            dummyText.setText(value.toString());
-            return dummyText;
-        }
-    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable internalRegTable;
@@ -422,7 +423,5 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JDialog valueDialog;
     private javax.swing.JTextField valueTextField;
     // End of variables declaration//GEN-END:variables
-    private int row;
-    private int col;
-    
+    private String memoryAddress;
 }
