@@ -11,11 +11,9 @@ public class Cycle {
     
     private final String cycleString;
     private final int instructionNo;
-    private final String opCode;
     
-    public Cycle(String cycleString, String opCode, int instructionNo){
+    public Cycle(String cycleString, int instructionNo){
         this.cycleString = cycleString;
-        this.opCode = opCode;
         this.instructionNo = instructionNo;
     }
     
@@ -25,10 +23,6 @@ public class Cycle {
     
     public int getInstructionNo(){
         return this.instructionNo;
-    }
-    
-    public String getOpCode(){
-        return this.opCode;
     }
     
 }
