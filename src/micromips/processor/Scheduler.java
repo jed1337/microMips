@@ -272,28 +272,29 @@ public class Scheduler {
             if (Arrays.stream(getDependencies(currOpCodeChecked))
                     .anyMatch(j -> j == getToBeUpdated(opCode))) {
 //                System.out.println("Dependecy!");
-                if (UtilityFunctions.to32BitBinString(opCode).substring(0, 6).equals("110111")) {
-                    if (stage.equals("MEM")) {
+                if (UtilityFunctions.to32BitBinString(opCode).substring(0, 6).equals("110111")) { //check if opcode is a load
+                    if (stage.equals("MEM")) { //check if load instruction is in MEM (is the data ready?)
                         int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
-                        if (index == 0) {
+                        if (index == 0) { //checks which value override
                             InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_LMD;
                         } else {
                             InstructionDecode.ID_EX_B = MemoryAccess.MEM_WB_LMD;
                         }
 //                        System.out.println("MEM Forward!");
                         return false;
-                    } else {
-                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
-                            if (i == 0) {
+                    } else { //not mem
+                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) { //check if checked opcode is not store
+                            //load is at EX
+                            if (i == 0) { //that means ALU operation. If index is 0 then, it is already going to EX
 //                                System.out.println("Stall!");
                                 return true; //stall
                             }
                         }
                     }
-                } else {
-                    if (stage.equals("MEM")) {
-                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
-                            if (i > 0) {
+                } else {//not a load REGLAR ALU
+                    if (stage.equals("MEM")) { //is mem
+                        if (UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {// not a store
+                            if (i == 1) {
                                 int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
                                 if (index == 0) {
                                     InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_ALU_OUTPUT;
@@ -302,8 +303,7 @@ public class Scheduler {
                                 }
 //                                System.out.println("MEM Forward!");
                             }
-                        }
-                        else{
+                        } else {// it's a store going to memory
                             int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
                             if (index == 0) {
                                 InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_ALU_OUTPUT;
@@ -313,8 +313,14 @@ public class Scheduler {
 //                            System.out.println("MEM Forward!");
                         }
                         return false;
-                    } else if (stage.equals("EX")) {   
-                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
+                    } else if (stage.equals("EX")) {//ALU operation is in EX
+                        if (UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {// check if dependent instruction is store
+                            int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
+                            if (index == 0) { //check if the computation required is only in address (EX)
+                                InstructionDecode.ID_EX_A = Execution.EX_MEM_ALU_OUTPUT;
+//                                System.out.println("EX Forward!");
+                            }
+                        } else {//if its not a store, just forward!
                             int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
                             if (index == 0) {
                                 InstructionDecode.ID_EX_A = Execution.EX_MEM_ALU_OUTPUT;
@@ -322,15 +328,8 @@ public class Scheduler {
                                 InstructionDecode.ID_EX_B = Execution.EX_MEM_ALU_OUTPUT;
                             }
 //                            System.out.println("EX Forward!");
-                        }                        
-                        return false;
-                    } else {
-                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
-                            if (i == 0) {
-//                                System.out.println("Stall!");
-                                return true; //stall
-                            }
                         }
+                        return false;
                     }
                 }
             }
@@ -368,5 +367,5 @@ public class Scheduler {
 
         System.out.println();
     }
-    
+
 }
