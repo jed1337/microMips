@@ -188,9 +188,76 @@ public class Scheduler {
       return opcodes;
    }
    
+   public int getToBeUpdated(int opCode){
+       String binaryIR = UtilityFunctions.to32BitBinString(opCode);     
+       switch(binaryIR.substring(0,6)){
+           case "000000":
+                switch(binaryIR.substring(26, 32)){
+                    case "100110": //XOR                        
+                    case "101111": //DSUBU
+                    case "101010": //SLT
+                        return Integer.parseInt(binaryIR.substring(16,21),2);
+                    case "000000": //NOP
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case "001000": //BEQC   
+                break;
+            case "011001": //DADDIU                
+            case "110111": //LD
+                Integer.parseInt(binaryIR.substring(11,16),2);
+            case "111111": //SD
+                break;
+            default:
+                break;
+        }        
+       return -1;
+   }
+   
+   public int[] getDependencies(int opCode){
+       String binaryIR = UtilityFunctions.to32BitBinString(opCode);     
+       switch(binaryIR.substring(0,6)){
+           case "000000":
+                switch(binaryIR.substring(26, 32)){
+                    case "100110": //XOR                        
+                    case "101111": //DSUBU
+                    case "101010": //SLT
+                        return new int[]{
+                            Integer.parseInt(binaryIR.substring(6,11), 2),
+                            Integer.parseInt(binaryIR.substring(11,16), 2)
+                        };
+                    case "000000": //NOP
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case "001000": //BEQC   
+                return new int[]{
+                    Integer.parseInt(binaryIR.substring(6,11), 2),
+                    Integer.parseInt(binaryIR.substring(11,16), 2)
+                };
+            case "011001": //DADDIU                
+            case "110111": //LD
+                return new int[]{
+                    Integer.parseInt(binaryIR.substring(6,11), 2)
+                };
+            case "111111": //SD
+                return new int[]{
+                    Integer.parseInt(binaryIR.substring(6,11), 2),
+                    Integer.parseInt(binaryIR.substring(11,16), 2)                    
+                };
+            default:
+                break;
+        }        
+       return new int[]{};
+   }
+   
    public void runOneCycle(){
        
-       Writeback.writeback();       
+       Writeback.writeback();  
        MemoryAccess.memoryAccess();
        Execution.execute();
        InstructionDecode.decode();

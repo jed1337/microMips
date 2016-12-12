@@ -42,6 +42,25 @@ public class UtilityFunctions {
         return s;
     }
     
+    public static long toSignedExtendedImmediate(int val){
+        String s = Integer.toBinaryString(val);
+        int numPadding = 16 - s.length();
+        char pad = '0';
+        while(numPadding > 0){
+            s = pad + s;
+            numPadding--;
+        }
+        numPadding = 64 - s.length();
+        if(s.charAt(0) == '1'){
+            pad = '1';
+        }
+        while(numPadding > 0){
+            s = pad + s;
+            numPadding--;
+        }
+        return Long.parseUnsignedLong(s, 2);
+    }
+    
     public static String to32BitHexString(int val){
         return String.format("%08x", val);
     }

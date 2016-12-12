@@ -20,7 +20,7 @@ public class InstructionDecode {
         
         InstructionDecode.ID_EX_A = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6,11), 2));
         InstructionDecode.ID_EX_B = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11,16), 2));
-        InstructionDecode.ID_EX_IMM = Long.parseLong(binaryIR.substring(16,32),2);             
+        InstructionDecode.ID_EX_IMM = UtilityFunctions.toSignedExtendedImmediate(Integer.parseInt(binaryIR.substring(16,32),2));             
     }
     
     public static void printContents(){        
