@@ -35,7 +35,7 @@ public class Test {
       
       scheduler.setInput(
          "bc label \n"
-         +"NOP \n"
+         +"DSUBU R5, R1, R3 \n"
          +"NOP \n"
          +"NOP \n"
          +"NOP \n"
