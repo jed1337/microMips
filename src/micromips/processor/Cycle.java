@@ -11,10 +11,12 @@ public class Cycle {
     
     private final String cycleString;
     private final int instructionNo;
+    private final int clockCycleNo;
     
-    public Cycle(String cycleString, int instructionNo){
+    public Cycle(String cycleString, int instructionNo, int clockCycleNo){
         this.cycleString = cycleString;
         this.instructionNo = instructionNo;
+        this.clockCycleNo = clockCycleNo;
     }
     
     public String getCycleString(){
@@ -23,6 +25,10 @@ public class Cycle {
     
     public int getInstructionNo(){
         return this.instructionNo;
+    }
+    
+    public int getClockCycleNo(){
+        return this.clockCycleNo;
     }
     
 }
