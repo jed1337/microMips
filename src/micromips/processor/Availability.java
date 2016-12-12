@@ -1,6 +1,5 @@
 package micromips.processor;
 
-import java.util.ArrayList;
 import utilities.UtilityFunctions;
 
 public class Availability {
@@ -36,10 +35,11 @@ public class Availability {
             return new Availability(Integer.parseInt(regB, 2), CYCLE_NAME.MEM);
             
          case "001000": //BEQC   
+         case "110010": //BC
          case "111111": //SD
             break;
          default:
-            System.err.println("Unknown instruction "+instruction);
+            System.err.println("Availability  has an unknown instruction "+instruction+" Opcode: "+opcode);
       }
       return null;
    }

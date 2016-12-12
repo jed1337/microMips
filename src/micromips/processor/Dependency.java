@@ -38,6 +38,8 @@ public class Dependency {
             dependencies.add(new Dependency(Integer.parseInt(regA, 2), CYCLE_NAME.ID));
             dependencies.add(new Dependency(Integer.parseInt(regB, 2), CYCLE_NAME.ID));                  
             break;
+         case "110010": //BC
+            break;
          case "011001": //DADDIU
          case "110111": //LD
             dependencies.add(new Dependency(Integer.parseInt(regA, 2), CYCLE_NAME.EX));
@@ -47,7 +49,7 @@ public class Dependency {
             dependencies.add(new Dependency(Integer.parseInt(regB, 2), CYCLE_NAME.MEM));
             break;
          default:
-            System.err.println("Unknown instruction "+instruction);
+            System.err.println("Dependency has an unknown instruction "+instruction+" Opcode: "+opcode);
       }
       return dependencies;
    }

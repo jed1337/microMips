@@ -33,7 +33,15 @@ public class Test {
       Storage.dataStoreDouble(0x3000, 0x8967452301EFCDABL);
       Storage.dataStoreDouble(0x3008, 0x5544332211EFCDABL);
       
-      scheduler.setInput("LD R1, 3000(R2) \n DADDIU R3, R0, 0003\n DSUBU R5,R1,R3 \n SD R5, 3000(R7) \n");
+      scheduler.setInput(
+         "bc label \n"
+         +"NOP \n"
+         +"NOP \n"
+         +"NOP \n"
+         +"NOP \n"
+         +"label: DADDIU R1, R2, 3 \n"
+      );
+
       scheduler.applyModifications();
       scheduler.setOpcodes();
       scheduler.storeOpcodes();
