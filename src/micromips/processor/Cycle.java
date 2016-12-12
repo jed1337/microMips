@@ -30,5 +30,4 @@ public class Cycle {
     public int getClockCycleNo(){
         return this.clockCycleNo;
     }
-    
 }

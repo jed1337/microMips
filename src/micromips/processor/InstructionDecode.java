@@ -11,13 +11,14 @@ public class InstructionDecode {
     public static int ID_EX_IR = 0;
     public static int ID_EX_NPC = 0;
     
+    public static void loadValues(){       
+        InstructionDecode.ID_EX_IR = InstructionFetch.IF_ID_IR;
+        InstructionDecode.ID_EX_NPC = InstructionFetch.IF_ID_NPC;        
+    }
+    
     public static void decode(){
         
-        InstructionDecode.ID_EX_IR = InstructionFetch.IF_ID_IR;
-        InstructionDecode.ID_EX_NPC = InstructionFetch.IF_ID_NPC;
-        
-        String binaryIR = UtilityFunctions.to32BitBinString(InstructionDecode.ID_EX_IR);
-        
+        String binaryIR = UtilityFunctions.to32BitBinString(InstructionDecode.ID_EX_IR);        
         InstructionDecode.ID_EX_A = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6,11), 2));
         InstructionDecode.ID_EX_B = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11,16), 2));
         InstructionDecode.ID_EX_IMM = UtilityFunctions.toSignedExtendedImmediate(Integer.parseInt(binaryIR.substring(16,32),2));             
