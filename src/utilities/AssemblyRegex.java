@@ -9,7 +9,7 @@ public class AssemblyRegex {
    private static final Pattern P_CP     = Pattern.compile("(\\s*\\)\\s*)"); //close parenthesis
    private static final Pattern P_COMMA  = Pattern.compile("(,)");
    private static final Pattern P_WORD   = Pattern.compile("(\\w+)");
-   private static final Pattern P_IMM    = Pattern.compile("(\\d{1,4})");
+   private static final Pattern P_IMM    = Pattern.compile("([0-9a-fA-F]{1,4})");
 
    private static final Pattern P_LABEL  = Pattern.compile("\\s*(\\w+)(:)\\s+");
    private static final Pattern P_OPCODE = Pattern.compile("(\\w+)");

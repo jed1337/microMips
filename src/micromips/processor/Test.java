@@ -22,19 +22,37 @@ public class Test {
       scheduler.setOpcodes();
       */
       
-      Storage.storeRegisterValue(2, 0xFFFF);
-      Storage.storeRegisterValue(4, 0x4);
-      Storage.storeRegisterValue(5, 0x1);
+      Storage.storeRegisterValue(1, 0x2);
+      Storage.storeRegisterValue(2, 0x8);
+      Storage.storeRegisterValue(3, 0x4);
+      Storage.storeRegisterValue(4, 0x5);
+      Storage.storeRegisterValue(5, 0x8);
+      Storage.storeRegisterValue(6, 0x1);      
+      Storage.storeRegisterValue(8, 0x4);
       
-      scheduler.setInput("DADDIU r1, r2, 8000 \n DSUBU r3, r4, r5\n");
+      Storage.dataStoreDouble(0x3000, 0x8967452301EFCDABL);
+      Storage.dataStoreDouble(0x3008, 0x5544332211EFCDABL);
+      
+      scheduler.setInput("LD R1, 3000(R2) \n DADDIU R3, R0, 0003\n DSUBU R5,R1,R3 \n SD R5, 3000(R7) \n");
       scheduler.applyModifications();
       scheduler.setOpcodes();
       scheduler.storeOpcodes();
+      
+      System.out.println("--Cycle 1--");
       scheduler.runOneCycle();
+      System.out.println("--Cycle 2--");
       scheduler.runOneCycle();
+      System.out.println("--Cycle 3--");
       scheduler.runOneCycle();
+      System.out.println("--Cycle 4--");
       scheduler.runOneCycle();
+      System.out.println("--Cycle 5--");
       scheduler.runOneCycle();
+      System.out.println("--Cycle 6--");
+      scheduler.runOneCycle();
+      System.out.println("--Cycle 7--");
+      scheduler.runOneCycle();
+      System.out.println("--Cycle 8--");
       scheduler.runOneCycle();
    }
 }

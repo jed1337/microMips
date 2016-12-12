@@ -14,12 +14,12 @@ public class InstructionFetch {
         
         String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
         if(binaryIR.substring(0,6).equals("110010")){
-            InstructionFetch.IF_ID_IR = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(6,32), 2) * 4);
+            InstructionFetch.IF_ID_NPC = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(6,32), 2) * 4);
         }
         else if(binaryIR.substring(0,6).equals("001000")){
             if(Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6,11), 2))
                     == Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11,16), 2))){
-                InstructionFetch.IF_ID_IR = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(16,32), 2) * 4);
+                InstructionFetch.IF_ID_NPC = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(16,32), 2) * 4);
             }
             else{
                 InstructionFetch.IF_ID_NPC = InstructionFetch.PC += 0x4;

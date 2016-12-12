@@ -62,15 +62,15 @@ public class UtilityFunctions {
     }
     
     public static String to32BitHexString(int val){
-        return String.format("%08x", val);
+        return String.format("%08x", val).toUpperCase();
     }
     
     public static String to64BitHexString(int val){
-        return String.format("%016x", (long)val);
+        return String.format("%016x", (long)val).toUpperCase();
     }
 
     public static String to64BitHexString(long val){
-        return String.format("%016x", val);
+        return String.format("%016x", val).toUpperCase();
     }
     
 }
