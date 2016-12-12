@@ -265,13 +265,13 @@ public class Scheduler {
     }
 
     public boolean checkAndForward(int opCode, int[] prevOpCodes, String stage) {
-        //System.out.println("opCode: " + UtilityFunctions.to32BitHexString(opCode) + ": " + getToBeUpdated(opCode));
+//        System.out.println("opCode: " + UtilityFunctions.to32BitHexString(opCode) + ": " + getToBeUpdated(opCode));
         for (int i = 0; i < prevOpCodes.length; i++) {
             int currOpCodeChecked = prevOpCodes[i];
-            //System.out.println("opCodeCheck: " + UtilityFunctions.to32BitHexString(currOpCodeChecked) + ": " + Arrays.toString(getDependencies(currOpCodeChecked)));
+//            System.out.println("opCodeCheck: " + UtilityFunctions.to32BitHexString(currOpCodeChecked) + ": " + Arrays.toString(getDependencies(currOpCodeChecked)));
             if (Arrays.stream(getDependencies(currOpCodeChecked))
                     .anyMatch(j -> j == getToBeUpdated(opCode))) {
-                System.out.println("Dependecy!");
+//                System.out.println("Dependecy!");
                 if (UtilityFunctions.to32BitBinString(opCode).substring(0, 6).equals("110111")) {
                     if (stage.equals("MEM")) {
                         int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
@@ -280,34 +280,57 @@ public class Scheduler {
                         } else {
                             InstructionDecode.ID_EX_B = MemoryAccess.MEM_WB_LMD;
                         }
-                        System.out.println("MEM Forward!");
+//                        System.out.println("MEM Forward!");
                         return false;
                     } else {
-                        System.out.println("Stall!");
-                        return true; //stall
+                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
+                            if (i == 0) {
+//                                System.out.println("Stall!");
+                                return true; //stall
+                            }
+                        }
                     }
                 } else {
                     if (stage.equals("MEM")) {
-                        int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
-                        if (index == 0) {
-                            InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_ALU_OUTPUT;
-                        } else {
-                            InstructionDecode.ID_EX_B = MemoryAccess.MEM_WB_ALU_OUTPUT;
+                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
+                            if (i > 0) {
+                                int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
+                                if (index == 0) {
+                                    InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_ALU_OUTPUT;
+                                } else {
+                                    InstructionDecode.ID_EX_B = MemoryAccess.MEM_WB_ALU_OUTPUT;
+                                }
+//                                System.out.println("MEM Forward!");
+                            }
                         }
-                        //System.out.println("MEM Forward!");
+                        else{
+                            int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
+                            if (index == 0) {
+                                InstructionDecode.ID_EX_A = MemoryAccess.MEM_WB_ALU_OUTPUT;
+                            } else {
+                                InstructionDecode.ID_EX_B = MemoryAccess.MEM_WB_ALU_OUTPUT;
+                            }
+//                            System.out.println("MEM Forward!");
+                        }
                         return false;
-                    } else if (stage.equals("EX")) {
-                        int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
-                        if (index == 0) {
-                            InstructionDecode.ID_EX_A = Execution.EX_MEM_ALU_OUTPUT;
-                        } else {
-                            InstructionDecode.ID_EX_B = Execution.EX_MEM_ALU_OUTPUT;
-                        }
-                        System.out.println("EX Forward!");
+                    } else if (stage.equals("EX")) {   
+                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
+                            int index = indexOf(getDependencies(currOpCodeChecked), getToBeUpdated(opCode));
+                            if (index == 0) {
+                                InstructionDecode.ID_EX_A = Execution.EX_MEM_ALU_OUTPUT;
+                            } else {
+                                InstructionDecode.ID_EX_B = Execution.EX_MEM_ALU_OUTPUT;
+                            }
+//                            System.out.println("EX Forward!");
+                        }                        
                         return false;
                     } else {
-                        System.out.println("Stall!");
-                        return true; //stall
+                        if (!UtilityFunctions.to32BitBinString(currOpCodeChecked).substring(0, 6).equals("111111")) {
+                            if (i == 0) {
+//                                System.out.println("Stall!");
+                                return true; //stall
+                            }
+                        }
                     }
                 }
             }
@@ -323,21 +346,20 @@ public class Scheduler {
             InstructionDecode.ID_EX_IR,
             InstructionFetch.IF_ID_IR
         }, "MEM")) {
+            MemoryAccess.memoryAccess();
+            if (!checkAndForward(Execution.EX_MEM_IR, new int[]{
+                InstructionDecode.ID_EX_IR,
+                InstructionFetch.IF_ID_IR
+            }, "EX")) {
+                Execution.execute();
+                InstructionDecode.decode();
 
+                if (InstructionFetch.PC < endPC) {
+                    InstructionFetch.fetch();
+                }
+            }
         }
-        MemoryAccess.memoryAccess();
-        if (!checkAndForward(Execution.EX_MEM_IR, new int[]{
-            InstructionDecode.ID_EX_IR,
-            InstructionFetch.IF_ID_IR
-        }, "EX")) {
 
-        }
-        Execution.execute();
-        InstructionDecode.decode();
-
-        if (InstructionFetch.PC < endPC) {
-            InstructionFetch.fetch();
-        }
         InstructionFetch.printContents();
         InstructionDecode.printContents();
         Execution.printContents();
@@ -346,4 +368,5 @@ public class Scheduler {
 
         System.out.println();
     }
+    
 }

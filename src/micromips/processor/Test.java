@@ -54,5 +54,8 @@ public class Test {
       scheduler.runOneCycle();
       System.out.println("--Cycle 8--");
       scheduler.runOneCycle();
+      
+      System.out.println(UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(0x3000)));
+      System.out.println(UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(0x3008)));
    }
 }
