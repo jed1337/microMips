@@ -5,6 +5,11 @@
  */
 package view;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,6 +34,11 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        valueDialog = new javax.swing.JDialog();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        valueTextField = new javax.swing.JTextField();
+        valueButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -47,10 +57,57 @@ public class MainFrame extends javax.swing.JFrame {
         internalRegTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
 
+        valueDialog.setMinimumSize(new java.awt.Dimension(400, 200));
+        valueDialog.setResizable(false);
+
+        jLabel7.setText("Input a new value:");
+
+        jLabel8.setText("Value:");
+
+        valueButton.setText("Done");
+        valueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                valueButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout valueDialogLayout = new javax.swing.GroupLayout(valueDialog.getContentPane());
+        valueDialog.getContentPane().setLayout(valueDialogLayout);
+        valueDialogLayout.setHorizontalGroup(
+            valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, valueDialogLayout.createSequentialGroup()
+                .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(valueDialogLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(valueButton))
+                    .addGroup(valueDialogLayout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addGroup(valueDialogLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(72, 72, 72)
+                                .addComponent(valueTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))))
+                .addGap(66, 66, 66))
+        );
+        valueDialogLayout.setVerticalGroup(
+            valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(valueDialogLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(valueDialogLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel8)))
+                .addGap(18, 18, 18)
+                .addComponent(valueButton)
+                .addContainerGap(62, Short.MAX_VALUE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(914, 693));
         setMinimumSize(new java.awt.Dimension(914, 693));
-        setPreferredSize(new java.awt.Dimension(914, 693));
         setResizable(false);
         setSize(new java.awt.Dimension(908, 685));
 
@@ -86,6 +143,8 @@ public class MainFrame extends javax.swing.JFrame {
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            JTextField textField = new JTextField("");
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -129,6 +188,8 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        memoryTable.setMaximumSize(new java.awt.Dimension(0, 0));
+        memoryTable.setMinimumSize(new java.awt.Dimension(0, 0));
         DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();
 
         int memVal = 0x3000;
@@ -137,6 +198,23 @@ public class MainFrame extends javax.swing.JFrame {
             memoryModel.addRow(new Object[]{Integer.toHexString(memVal).toUpperCase(), "0000000000000000"});
             memVal += 0x8;
         }
+
+        memoryTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table =(JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = -1;
+                int col = -1;
+                if (me.getClickCount() == 2 && col > 0) {
+                    row = table.rowAtPoint(p);
+                    col = table.columnAtPoint(p);
+                    valueFrame.setVisible(true);
+                }
+            }
+        });
+
+        this.row = row;
+        this.col = col;
         jScrollPane6.setViewportView(memoryTable);
         if (memoryTable.getColumnModel().getColumnCount() > 0) {
             memoryTable.getColumnModel().getColumn(0).setResizable(false);
@@ -240,9 +318,26 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void valueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_valueButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
+    
+    public int getRow() {
+        return this.row;
+    }
+    
+    public int getCol() {
+        return this.col;
+    }
+    
+    public void setValue(int row, int col, String value) {
+        Storage.
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -274,6 +369,34 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    /*public class MyCellEditor extends AbstractCellEditor implements TableCellEditor {
+        private static final long serialVersionUID = 1L;
+    
+        @Override
+        public boolean isCellEditable(EventObject e) {
+            if (super.isCellEditable(e)) {
+                if (e instanceof MouseEvent) {
+                    MouseEvent me = (MouseEvent) e;
+                    return me.getClickCount() >= 2;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return dummyText.getText();
+            //return "Test";
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            dummyText.setFont(table.getFont());
+            dummyText.setText(value.toString());
+            return dummyText;
+        }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable internalRegTable;
@@ -283,6 +406,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -293,5 +418,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable memoryTable;
     private javax.swing.JTable registerTable;
     private javax.swing.JTextArea sourceCodeArea;
+    private javax.swing.JButton valueButton;
+    private javax.swing.JDialog valueDialog;
+    private javax.swing.JTextField valueTextField;
     // End of variables declaration//GEN-END:variables
+    private int row;
+    private int col;
+    
 }
