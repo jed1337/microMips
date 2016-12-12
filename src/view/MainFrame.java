@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -42,7 +43,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
         jLabel17 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -58,6 +58,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         codeTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        pipelineMap = new javax.swing.JScrollPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
@@ -70,7 +71,6 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle("MicroMIPS64");
         setMaximumSize(new java.awt.Dimension(945, 640));
         setMinimumSize(new java.awt.Dimension(945, 640));
-        setResizable(false);
         setSize(new java.awt.Dimension(945, 640));
 
         jLabel1.setText("Pipeline Map:");
@@ -283,6 +283,11 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.add(jMenu5);
 
         jMenu6.setText("Run All Cycles");
+        jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu6MouseClicked(evt);
+            }
+        });
         jMenu1.add(jMenu6);
 
         jMenuBar1.add(jMenu1);
@@ -331,13 +336,13 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel4))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(pipelineMap))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -353,7 +358,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane2))
+                    .addComponent(pipelineMap))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17)
@@ -371,15 +376,86 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /*private class DrawPipelineMap extends JPanel {
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);  
+
+            Graphics2D g2d = (Graphics2D) g;
+            animCycles.stream().forEach((cycle) -> {
+                cycle.paint(g2d);
+            });
+        }
+    }*/
+    
     private void loadButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadButtonMouseClicked
         try {
-        String userCode = sourceCodeArea.getText();
-        
-        System.out.println(userCode);
+            String userCode = sourceCodeArea.getText();
+
+            System.out.println(userCode);
         } catch (Exception e) {
             //do nothing
         }
     }//GEN-LAST:event_loadButtonMouseClicked
+
+    private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
+        PipelinePanel pipelinePanel = new PipelinePanel();
+        pipelinePanel.setSize(500, 500);
+        //pipelinePanel.setPreferredSize(new Dimension(1000, 1000));
+        pipelineMap.add(pipelinePanel);
+        pipelinePanel.repaint();
+        /*try {
+            DrawPipelineMap drawPane = new DrawPipelineMap();
+            drawPane.setSize(600, 600);
+            pipelineMap.add(drawPane);
+            ArrayList<Cycle> cycles = new ArrayList<Cycle>();
+            
+            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 0, 0));
+            
+            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 1, 1));
+            cycles.add(new Cycle(Cycle.INSTRUCTION_DECODE, 0, 1));
+
+            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 2, 2));
+            cycles.add(new Cycle(Cycle.INSTRUCTION_DECODE, 1, 2));
+            cycles.add(new Cycle(Cycle.EXECUTION, 0, 2));
+
+            cycles.add(new Cycle(Cycle.STALL, 2, 3));
+            cycles.add(new Cycle(Cycle.EXECUTION, 1, 3));
+            cycles.add(new Cycle(Cycle.MEMORY_ACCESS, 0, 3));
+
+            int x, y;
+            for (Cycle cycle : cycles) {
+                x = cycle.getClockCycleNo();
+                y = cycle.getInstructionNo();
+                switch (cycle.getCycleString()) {
+                    case "IF":
+                        animCycles.add(new MapBlock(x*30, y*30, "#2ecc71"));
+                        //drawPane.update(x*30, y*30, "#2ecc71");
+                        break;
+                    case "ID":
+                        animCycles.add(new MapBlock(x*30, y*30, "#3498db"));
+                        break;
+                    case "EX":
+                        animCycles.add(new MapBlock(x*30, y*30, "#f1c40f"));
+                        break;
+                    case "MEM":
+                        animCycles.add(new MapBlock(x*30, y*30, "#e67e22"));
+                        break;    
+                    case "WB":
+                        animCycles.add(new MapBlock(x*30, y*30, "#e74c3c"));
+                        break;
+                    default:
+                        animCycles.add(new MapBlock(x*30, y*30, "#000000"));
+                        break;
+                }
+                
+                repaint();
+            }
+        } catch(Exception e){
+            
+        }*/
+    }//GEN-LAST:event_jMenu6MouseClicked
 
     public void setValue(String memoryAddress, String value, int toggle, int row) {
         String s;
@@ -427,7 +503,7 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
         
         //</editor-fold>
-      
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new MainFrame().setVisible(true);
@@ -450,7 +526,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
@@ -458,6 +533,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JMenu loadButton;
     private javax.swing.JTable memoryTable;
+    private javax.swing.JScrollPane pipelineMap;
     private javax.swing.JTable registerTable;
     private javax.swing.JTextArea sourceCodeArea;
     // End of variables declaration//GEN-END:variables
