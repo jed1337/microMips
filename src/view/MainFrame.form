@@ -2,96 +2,64 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Container class="javax.swing.JDialog" name="valueDialog">
-      <Properties>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[400, 200]"/>
-        </Property>
-        <Property name="resizable" type="boolean" value="false"/>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="valueButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                                  <Component id="valueTextField" pref="175" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="valueTextField" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="valueButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="62" max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
+    <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel7">
+        <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Input a new value:"/>
+            <Property name="text" type="java.lang.String" value="Run"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel8">
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jMenu5">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Run One Cycle"/>
+              </Properties>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jMenu6">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Run All Cycles"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="loadButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Value:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="valueTextField">
-        </Component>
-        <Component class="javax.swing.JButton" name="valueButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Done"/>
+            <Property name="text" type="java.lang.String" value="Load"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="valueButtonActionPerformed"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="loadButtonMouseClicked"/>
           </Events>
-        </Component>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Memory"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jMenu4">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="GOTO Memory"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
       </SubComponents>
-    </Container>
+    </Menu>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="MicroMIPS64"/>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[914, 693]"/>
+      <Dimension value="[945, 640]"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[914, 693]"/>
+      <Dimension value="[945, 640]"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
     <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[908, 685]"/>
+      <Dimension value="[945, 640]"/>
     </Property>
   </Properties>
   <SyntheticProperties>
+    <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
@@ -113,36 +81,44 @@
           <Group type="102" attributes="0">
               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jScrollPane4" min="-2" pref="250" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                          <Component id="jScrollPane1" min="-2" pref="249" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jScrollPane5" min="-2" pref="250" max="-2" attributes="0"/>
+                              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                              <Component id="jScrollPane6" min="-2" pref="250" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="220" pref="220" max="-2" attributes="0"/>
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="204" pref="204" max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="244" pref="244" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jScrollPane4" min="-2" pref="250" max="-2" attributes="0"/>
-                      <EmptySpace min="19" pref="19" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="300" max="-2" attributes="0"/>
-                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="301" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="220" pref="220" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="225" pref="225" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jScrollPane5" min="-2" pref="250" max="-2" attributes="0"/>
-                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                      <Component id="jScrollPane6" min="-2" pref="250" max="-2" attributes="0"/>
-                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                      <Component id="jScrollPane7" min="-2" pref="352" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="16" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane7" pref="389" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -152,20 +128,24 @@
               <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane4" min="-2" pref="305" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="305" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="305" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jScrollPane1" pref="267" max="32767" attributes="0"/>
+                  <Component id="jScrollPane4" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -173,7 +153,7 @@
                   <Component id="jScrollPane5" alignment="0" pref="0" max="32767" attributes="0"/>
                   <Component id="jScrollPane7" pref="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="40" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -186,7 +166,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Code Segment:"/>
+        <Property name="text" type="java.lang.String" value="Internal MIPS64 Registers:"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -227,15 +207,14 @@
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-    </Container>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane5">
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="registerTable">
+        <Component class="javax.swing.JTable" name="internalRegTable">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="DefaultTableModel registerModel = (DefaultTableModel) registerTable.getModel();&#xa;&#xa;for(int i=0;i&lt;32;i++){&#xa;    registerModel.addRow(new Object[]{&quot;R&quot; + i, &quot;0000000000000000&quot;});&#xa;}&#xa;&#xa;registerTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        String memoryAddress = null;&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            memoryAddress = (registerTable.getValueAt(row, 0)).toString();&#xa;            dialogClass.createDialog(memoryAddress, 0, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
-              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Register&quot;, &quot;Value&quot;&#xa;    }&#xa;) {&#xa;    Class[] types = new Class [] {&#xa;        java.lang.String.class, java.lang.String.class&#xa;    };&#xa;    boolean[] canEdit = new boolean [] {&#xa;        false, false&#xa;    };&#xa;&#xa;    public Class getColumnClass(int columnIndex) {&#xa;        return types [columnIndex];&#xa;    }&#xa;&#xa;    JTextField textField = new JTextField(&quot;&quot;);&#xa;&#xa;    public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;        return canEdit [columnIndex];&#xa;    }&#xa;}" type="code"/>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor" postCode="DefaultTableModel internalRegModel = (DefaultTableModel) internalRegTable.getModel();&#xa;&#xa;internalRegModel.addRow(new Object[]{&quot;IF/ID.IR&quot;, &quot;00000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;IF/ID.NPC&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;PC&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;ID/EX.IR&quot;, &quot;00000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;ID/EX.NPC&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;ID/EX.A&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;ID/EX.B&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;ID/EX.IMM&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;EX/MEM.IR&quot;, &quot;00000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;EX/MEM.ALU&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;EX/MEM.COND&quot;, &quot;0&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;EX/MEM.B&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;MEM/WB.IR&quot;, &quot;00000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;MEM/WB.LMD&quot;, &quot;0000000000000000&quot;});&#xa;internalRegModel.addRow(new Object[]{&quot;MEM/WB.ALU&quot;, &quot;0000000000000000&quot;});">
+              <Table columnCount="2" rowCount="0">
+                <Column editable="false" title="Register" type="java.lang.String"/>
+                <Column editable="false" title="Value" type="java.lang.String"/>
+              </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
@@ -252,7 +231,26 @@
               </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane5">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="registerTable">
+          <Properties>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="DefaultTableModel registerModel = (DefaultTableModel) registerTable.getModel();&#xa;&#xa;for(int i=0;i&lt;32;i++){&#xa;    registerModel.addRow(new Object[]{&quot;R&quot; + i, &quot;0000000000000000&quot;});&#xa;}&#xa;&#xa;registerTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            dialogClass.createDialog(&quot;NOINPUT&quot;, 0, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
+              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Register&quot;, &quot;Value&quot;&#xa;    }&#xa;) {&#xa;    Class[] types = new Class [] {&#xa;        java.lang.String.class, java.lang.String.class&#xa;    };&#xa;    boolean[] canEdit = new boolean [] {&#xa;        false, false&#xa;    };&#xa;&#xa;    public Class getColumnClass(int columnIndex) {&#xa;        return types [columnIndex];&#xa;    }&#xa;&#xa;    JTextField textField = new JTextField(&quot;&quot;);&#xa;&#xa;    public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;        return canEdit [columnIndex];&#xa;    }&#xa;}" type="code"/>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0"/>
+            </Property>
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>
@@ -295,8 +293,8 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[0, 0]"/>
             </Property>
-            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor" postCode="DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();&#xa;&#xa;int memVal = 0x3000;&#xa;&#xa;for(int i=0;i&lt;1024;i++){&#xa;    memoryModel.addRow(new Object[]{Integer.toHexString(memVal).toUpperCase(), &quot;0000000000000000&quot;});&#xa;    memVal += 0x8;&#xa;}&#xa;&#xa;memoryTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        String memoryAddress = null;&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            memoryAddress = (memoryTable.getValueAt(row, 0)).toString();&#xa;            dialogClass.createDialog(memoryAddress, 1, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor" postCode="DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();&#xa;&#xa;int memVal = 0x3000;&#xa;&#xa;for(int i=0;i&lt;1024;i++){&#xa;    memoryModel.addRow(new Object[]{Integer.toHexString(memVal).toUpperCase(), &quot;0000000000000000&quot;});&#xa;    memVal += 0x8;&#xa;}&#xa;&#xa;memoryTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        String memoryAddress;&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            memoryAddress = (memoryTable.getValueAt(row, 0)).toString();&#xa;            dialogClass.createDialog(memoryAddress, 1, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>
@@ -306,16 +304,28 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="internalRegTable">
+        <Component class="javax.swing.JTable" name="codeTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="2" rowCount="0">
-                <Column editable="false" title="Register" type="java.lang.String"/>
-                <Column editable="false" title="Value" type="java.lang.String"/>
+              <Table columnCount="4" rowCount="0">
+                <Column editable="false" title="Address" type="java.lang.String"/>
+                <Column editable="false" title="Representation" type="java.lang.String"/>
+                <Column editable="false" title="Label" type="java.lang.String"/>
+                <Column editable="false" title="Instruction" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="30" resizable="false">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="60" resizable="false">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="30" resizable="false">
                   <Title/>
                   <Editor/>
@@ -329,7 +339,7 @@
               </TableColumnModel>
             </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+              <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>
@@ -337,7 +347,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Internal MIPS64 Registers:"/>
+        <Property name="text" type="java.lang.String" value="Code Segment:"/>
       </Properties>
     </Component>
   </SubComponents>

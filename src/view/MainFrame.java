@@ -40,11 +40,6 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        valueDialog = new javax.swing.JDialog();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        valueTextField = new javax.swing.JTextField();
-        valueButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -54,72 +49,33 @@ public class MainFrame extends javax.swing.JFrame {
         sourceCodeArea = new javax.swing.JTextArea();
         jLabel26 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
+        internalRegTable = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
         registerTable = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
         memoryTable = new javax.swing.JTable();
         jScrollPane7 = new javax.swing.JScrollPane();
-        internalRegTable = new javax.swing.JTable();
+        codeTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-
-        valueDialog.setMinimumSize(new java.awt.Dimension(400, 200));
-        valueDialog.setResizable(false);
-
-        jLabel7.setText("Input a new value:");
-
-        jLabel8.setText("Value:");
-
-        valueButton.setText("Done");
-        valueButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                valueButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout valueDialogLayout = new javax.swing.GroupLayout(valueDialog.getContentPane());
-        valueDialog.getContentPane().setLayout(valueDialogLayout);
-        valueDialogLayout.setHorizontalGroup(
-            valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, valueDialogLayout.createSequentialGroup()
-                .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(valueDialogLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(valueButton))
-                    .addGroup(valueDialogLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addGroup(valueDialogLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(72, 72, 72)
-                                .addComponent(valueTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)))))
-                .addGap(66, 66, 66))
-        );
-        valueDialogLayout.setVerticalGroup(
-            valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(valueDialogLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(valueDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(valueDialogLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel8)))
-                .addGap(18, 18, 18)
-                .addComponent(valueButton)
-                .addContainerGap(62, Short.MAX_VALUE))
-        );
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        loadButton = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(914, 693));
-        setMinimumSize(new java.awt.Dimension(914, 693));
+        setTitle("MicroMIPS64");
+        setMaximumSize(new java.awt.Dimension(945, 640));
+        setMinimumSize(new java.awt.Dimension(945, 640));
         setResizable(false);
-        setSize(new java.awt.Dimension(908, 685));
+        setSize(new java.awt.Dimension(945, 640));
 
         jLabel1.setText("Pipeline Map:");
 
-        jLabel2.setText("Code Segment:");
+        jLabel2.setText("Internal MIPS64 Registers:");
 
         jLabel17.setText("Registers:");
 
@@ -130,6 +86,55 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane4.setViewportView(jScrollPane3);
 
         jLabel26.setText("Source Code:");
+
+        internalRegTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Register", "Value"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        DefaultTableModel internalRegModel = (DefaultTableModel) internalRegTable.getModel();
+
+        internalRegModel.addRow(new Object[]{"IF/ID.IR", "00000000"});
+        internalRegModel.addRow(new Object[]{"IF/ID.NPC", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"PC", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"ID/EX.IR", "00000000"});
+        internalRegModel.addRow(new Object[]{"ID/EX.NPC", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"ID/EX.A", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"ID/EX.B", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"ID/EX.IMM", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"EX/MEM.IR", "00000000"});
+        internalRegModel.addRow(new Object[]{"EX/MEM.ALU", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"EX/MEM.COND", "0"});
+        internalRegModel.addRow(new Object[]{"EX/MEM.B", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"MEM/WB.IR", "00000000"});
+        internalRegModel.addRow(new Object[]{"MEM/WB.LMD", "0000000000000000"});
+        internalRegModel.addRow(new Object[]{"MEM/WB.ALU", "0000000000000000"});
+        internalRegTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(internalRegTable);
+        if (internalRegTable.getColumnModel().getColumnCount() > 0) {
+            internalRegTable.getColumnModel().getColumn(0).setResizable(false);
+            internalRegTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+            internalRegTable.getColumnModel().getColumn(1).setResizable(false);
+            internalRegTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        }
 
         registerTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -166,22 +171,15 @@ public class MainFrame extends javax.swing.JFrame {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
-                String memoryAddress = null;
                 if (me.getClickCount() == 2) {
                     int row = table.rowAtPoint(p);
-                    memoryAddress = (registerTable.getValueAt(row, 0)).toString();
-                    dialogClass.createDialog(memoryAddress, 0, row);
+                    dialogClass.createDialog("NOINPUT", 0, row);
                     dialogClass.showDialog();
                 }
             }
         });
+        registerTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane5.setViewportView(registerTable);
-        if (registerTable.getColumnModel().getColumnCount() > 0) {
-            registerTable.getColumnModel().getColumn(0).setResizable(false);
-            registerTable.getColumnModel().getColumn(0).setPreferredWidth(30);
-            registerTable.getColumnModel().getColumn(1).setResizable(false);
-            registerTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-        }
 
         jLabel3.setText("Data Segment:");
 
@@ -210,6 +208,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         memoryTable.setMaximumSize(new java.awt.Dimension(0, 0));
         memoryTable.setMinimumSize(new java.awt.Dimension(0, 0));
+        memoryTable.getTableHeader().setReorderingAllowed(false);
         DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();
 
         int memVal = 0x3000;
@@ -223,7 +222,7 @@ public class MainFrame extends javax.swing.JFrame {
             public void mousePressed(MouseEvent me) {
                 JTable table =(JTable) me.getSource();
                 Point p = me.getPoint();
-                String memoryAddress = null;
+                String memoryAddress;
                 if (me.getClickCount() == 2) {
                     int row = table.rowAtPoint(p);
                     memoryAddress = (memoryTable.getValueAt(row, 0)).toString();
@@ -240,19 +239,19 @@ public class MainFrame extends javax.swing.JFrame {
             memoryTable.getColumnModel().getColumn(1).setPreferredWidth(100);
         }
 
-        internalRegTable.setModel(new javax.swing.table.DefaultTableModel(
+        codeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Register", "Value"
+                "Address", "Representation", "Label", "Instruction"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -263,15 +262,47 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane7.setViewportView(internalRegTable);
-        if (internalRegTable.getColumnModel().getColumnCount() > 0) {
-            internalRegTable.getColumnModel().getColumn(0).setResizable(false);
-            internalRegTable.getColumnModel().getColumn(0).setPreferredWidth(30);
-            internalRegTable.getColumnModel().getColumn(1).setResizable(false);
-            internalRegTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        codeTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane7.setViewportView(codeTable);
+        if (codeTable.getColumnModel().getColumnCount() > 0) {
+            codeTable.getColumnModel().getColumn(0).setResizable(false);
+            codeTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+            codeTable.getColumnModel().getColumn(1).setResizable(false);
+            codeTable.getColumnModel().getColumn(1).setPreferredWidth(60);
+            codeTable.getColumnModel().getColumn(2).setResizable(false);
+            codeTable.getColumnModel().getColumn(2).setPreferredWidth(30);
+            codeTable.getColumnModel().getColumn(3).setResizable(false);
+            codeTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         }
 
-        jLabel4.setText("Internal MIPS64 Registers:");
+        jLabel4.setText("Code Segment:");
+
+        jMenu1.setText("Run");
+
+        jMenu5.setText("Run One Cycle");
+        jMenu1.add(jMenu5);
+
+        jMenu6.setText("Run All Cycles");
+        jMenu1.add(jMenu6);
+
+        jMenuBar1.add(jMenu1);
+
+        loadButton.setText("Load");
+        loadButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loadButtonMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(loadButton);
+
+        jMenu3.setText("Memory");
+
+        jMenu4.setText("GOTO Memory");
+        jMenu3.add(jMenu4);
+
+        jMenuBar1.add(jMenu3);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -280,31 +311,34 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(19, 19, 19)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addGap(220, 220, 220)
+                                .addComponent(jLabel3))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel26)
                         .addGap(204, 204, 204)
-                        .addComponent(jLabel2)
-                        .addGap(244, 244, 244)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel2)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addGap(220, 220, 220)
-                        .addComponent(jLabel3)
-                        .addGap(225, 225, 225)
-                        .addComponent(jLabel4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,32 +346,40 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel26)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane2))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel4)))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void valueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_valueButtonActionPerformed
+    private void loadButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadButtonMouseClicked
+        try {
+        String userCode = sourceCodeArea.getText();
+        
+        System.out.println(userCode);
+        } catch (Exception e) {
+            //do nothing
+        }
+    }//GEN-LAST:event_loadButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -348,22 +390,25 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void setValue(String memoryAddress, String value, int toggle, int row) {
-        String s = null;
-        
-        //Update view
-        if(toggle == 0) {
-            //register
-            DefaultTableModel model = (DefaultTableModel)registerTable.getModel();
-            Storage.storeRegisterValue(row, Long.parseUnsignedLong(value, 16));
-            s = (UtilityFunctions.to64BitHexString(Storage.getRegisterValue(row))).toUpperCase();
-            model.setValueAt(s, row, 1);
-        }
-        else {
-            //memory
-            DefaultTableModel model = (DefaultTableModel)memoryTable.getModel();
-            Storage.dataStoreDouble(Integer.parseInt(memoryAddress, 16), Long.parseUnsignedLong(value, 16));
-            s = (UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(Integer.parseInt(memoryAddress, 16)))).toUpperCase();
-            model.setValueAt(s, row, 1);
+        String s;
+    
+        try {
+            if(toggle == 0) {
+                //register
+                DefaultTableModel model = (DefaultTableModel)registerTable.getModel();
+                Storage.storeRegisterValue(row, Long.parseUnsignedLong(value, 16));
+                s = (UtilityFunctions.to64BitHexString(Storage.getRegisterValue(row))).toUpperCase();
+                model.setValueAt(s, row, 1);
+            }
+            else {
+                //memory
+                DefaultTableModel model = (DefaultTableModel)memoryTable.getModel();
+                Storage.dataStoreDouble(Integer.parseInt(memoryAddress, 16), Long.parseUnsignedLong(value, 16));
+                s = (UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(Integer.parseInt(memoryAddress, 16)))).toUpperCase();
+                model.setValueAt(s, row, 1);
+            }
+        }   catch (Exception e) {
+            //do nothing
         }
     }
 
@@ -375,7 +420,7 @@ public class MainFrame extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -400,6 +445,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable codeTable;
     private javax.swing.JTable internalRegTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
@@ -407,8 +453,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -416,12 +466,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JMenu loadButton;
     private javax.swing.JTable memoryTable;
     private javax.swing.JTable registerTable;
     private javax.swing.JTextArea sourceCodeArea;
-    private javax.swing.JButton valueButton;
-    private javax.swing.JDialog valueDialog;
-    private javax.swing.JTextField valueTextField;
     // End of variables declaration//GEN-END:variables
     private String memoryAddress;
 }
