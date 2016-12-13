@@ -263,6 +263,7 @@ public class Scheduler {
    }
 
    public void runOneCycle() {
+      InstructionFetch.getInstance();
 
       Writeback.writeback();
       

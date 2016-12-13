@@ -3,32 +3,38 @@ package micromips.processor;
 import models.Storage;
 import utilities.UtilityFunctions;
 
-public class InstructionFetch {
-   public static boolean hasOldValue = false;
+public class InstructionFetch extends InstructionSuperClass{
+//   public static boolean hasOldValue = false;
 
-   public static int IF_ID_IR = 0;
-   public static int IF_ID_NPC = 0;
-   public static int PC = 0x1000;
+   public int IF_ID_IR = 0;
+   public int IF_ID_NPC = 0;
+   public int PC = 0x1000;
 
-   public static boolean hasJumped   = false;
+   public boolean hasJumped   = false;
    
-   private static long calA = 0x0;
-   private static long calB = 0x0;
+   private long calA = 0x0;
+   private long calB = 0x0;
 
-   private static boolean hasChangedA = false;
-   private static boolean hasChangedB = false;
+   private boolean hasChangedA = false;
+   private boolean hasChangedB = false;
+
+   private InstructionFetch() {}
    
-   public static void loadValues() {
-      String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
+   public InstructionFetch getInstance(){
+      return (InstructionFetch) super.getInstance(new InstructionFetch(), CYCLE_NAME.IF);
+   }
+   
+   public void loadValues() {
+      String binaryIR = UtilityFunctions.to32BitBinString(getInstance().IF_ID_IR);
       if (hasChangedA) {
          calA = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6, 11), 2));
       }
       if (hasChangedB) {
          calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));      }
-      InstructionFetch.hasOldValue = false;
+      super.hasOldValue = false;
    }
 
-   public static void forward(int loc, long val) {
+   public void forward(int loc, long val) {
       if (loc == 0) {
          calA = val;
          hasChangedA = true;
