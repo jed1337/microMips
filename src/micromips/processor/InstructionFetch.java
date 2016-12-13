@@ -3,8 +3,10 @@ package micromips.processor;
 import models.Storage;
 import utilities.UtilityFunctions;
 
-public class InstructionFetch {
+public class InstructionFetch extends InstructionSuperClass{
+//   public static boolean hasOldValue = false;
 
+<<<<<<< HEAD
     public static int IF_ID_IR = 0;
     public static int IF_ID_NPC = 0;
     public static int PC = 0x1000;
@@ -26,6 +28,45 @@ public class InstructionFetch {
             calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));
         }
     }
+=======
+   public int IF_ID_IR = 0;
+   public int IF_ID_NPC = 0;
+   public int PC = 0x1000;
+
+   public boolean hasJumped   = false;
+   
+   private long calA = 0x0;
+   private long calB = 0x0;
+
+   private boolean hasChangedA = false;
+   private boolean hasChangedB = false;
+
+   private InstructionFetch() {}
+   
+   public InstructionFetch getInstance(){
+      return (InstructionFetch) super.getInstance(new InstructionFetch(), CYCLE_NAME.IF);
+   }
+   
+   public void loadValues() {
+      String binaryIR = UtilityFunctions.to32BitBinString(getInstance().IF_ID_IR);
+      if (hasChangedA) {
+         calA = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6, 11), 2));
+      }
+      if (hasChangedB) {
+         calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));      }
+      super.hasOldValue = false;
+   }
+
+   public void forward(int loc, long val) {
+      if (loc == 0) {
+         calA = val;
+         hasChangedA = true;
+      } else {
+         calB = val;
+         hasChangedB = true;
+      }
+   }
+>>>>>>> origin/master
 
     public static void forward(int loc, long val) {
         if (loc == 0) {
@@ -37,8 +78,33 @@ public class InstructionFetch {
         }
     }
 
+<<<<<<< HEAD
     public static void fetch() {
         int oldPC = InstructionFetch.PC;
+=======
+      String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
+      final String opCode = binaryIR.substring(0, 6);
+      
+      hasJumped = false;
+      switch (opCode) {
+         case "110010": //BC
+            InstructionFetch.IF_ID_NPC = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(6, 32), 2) * 4);
+            hasJumped = true;
+            break;
+         case "001000": //BEQC
+            //Perform look ahead
+            if (calA == calB) {
+               InstructionFetch.IF_ID_NPC = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(16, 32), 2) * 4);
+               hasJumped = true;
+            } else {
+               InstructionFetch.IF_ID_NPC = InstructionFetch.PC += 0x4;
+            }
+            break;
+         default:
+            InstructionFetch.IF_ID_NPC = InstructionFetch.PC += 0x4;
+            break;
+      }
+>>>>>>> origin/master
 
         String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
         final String opCode = binaryIR.substring(0, 6);

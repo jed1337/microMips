@@ -10,6 +10,7 @@ public enum CYCLE_NAME {
 
     private final int num;
 
+<<<<<<< HEAD
     private CYCLE_NAME(int num) {
         this.num = num;
     }
@@ -25,4 +26,21 @@ public enum CYCLE_NAME {
     public boolean isGreaterThanOrEqual(CYCLE_NAME that) {
         return this.num >= that.num;
     }
+=======
+   public int getNum() {
+      return num;
+   }
+   
+   public boolean isPreviousCycle(CYCLE_NAME that){
+      return this.num < that.num;
+   }
+   
+   public boolean isGreaterThanOrEqual(CYCLE_NAME that){
+      return this.num >= that.num;
+   }
+
+   boolean isEqual(CYCLE_NAME that) {
+      return this.num == that.num;
+   }
+>>>>>>> origin/master
 }

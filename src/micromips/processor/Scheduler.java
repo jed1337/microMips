@@ -95,6 +95,7 @@ public class Scheduler {
                     break;
                 }
             }
+<<<<<<< HEAD
             if (!labelExists) {
                 Errors.addParsingError(mLabel, "Is nonexistent");
             }
@@ -319,6 +320,146 @@ public class Scheduler {
                     }
                 }
 
+=======
+         } //An immediate
+         else {
+            args[i] = Integer.parseInt(strings[i], 16);
+         }
+      }
+      return args;
+   }
+
+   public ArrayList<Instruction> getInstructions() {
+      return instructions;
+   }
+
+   public ArrayList<Modification> getModifications() {
+      return modifications;
+   }
+
+   public ArrayList<Integer> getOpcodes() {
+      return opcodes;
+   }
+
+   public boolean checkAndForward(int curCycle, int[] prevCycles, CYCLE_NAME curCycleName) {
+      String opcode = UtilityFunctions.to32BitBinString(curCycle).substring(0, 6);
+      Availability curCycleAvail = Availability.getAvailability(curCycle);
+      
+      for (int i = 0; i < prevCycles.length; i++) {
+         int prevCycle = prevCycles[i];
+         ArrayList<Dependency> prevCycleDepends = Dependency.getDependencies(prevCycle);
+         
+         final int dependencyIndex = getDependencyIndex(curCycleAvail, prevCycleDepends);
+         if (dependencyIndex != -1) {
+            Dependency prevCycleDepend = prevCycleDepends.get(dependencyIndex);
+            System.out.println("DEPENDENCY " + curCycleName.name());
+            //Check if the dependency is available
+            CYCLE_NAME curCycleAvailName = curCycleAvail.getCycleName();
+            CYCLE_NAME prevCycleDependName = prevCycleDepend.getCycleName();
+
+            //Item is available
+            if (isNeeded(prevCycleDependName, curCycleName, i)) {
+               if (isAvailable(curCycleName, curCycleAvailName)) {
+                  //Forward
+                  if (opcode.equals("110111")) {  //Load
+                     if (curCycleName == CYCLE_NAME.MEM) {
+                        System.out.println("FORWARD MEM.LMD (MEM)");
+                        Execution.forward(dependencyIndex, MemoryAccess.MEM_WB_LMD);
+                     } else if (curCycleName == CYCLE_NAME.ID) {
+                        System.out.println("FORWARD MEM.LMD (ID)");
+                        InstructionFetch.forward(dependencyIndex, MemoryAccess.MEM_WB_LMD);
+                     }
+                  } else { //Not load
+                     if (curCycleName == CYCLE_NAME.MEM) {
+                        if (opcode.equals("111111")) {
+                           MemoryAccess.forward(MemoryAccess.MEM_WB_ALU_OUTPUT);
+                           System.out.println("FORWARD MEM.ALU (MEM)");
+                        } else {
+                           Execution.forward(dependencyIndex, MemoryAccess.MEM_WB_ALU_OUTPUT);
+
+                           System.out.println("FORWARD MEM.ALU (EX)");
+                        }
+
+                     } else if (curCycleName == CYCLE_NAME.EX) {
+                        Execution.forward(dependencyIndex, Execution.EX_MEM_ALU_OUTPUT);
+                        System.out.println("FORWARD EX.ALU (EX)");
+                     } else if (curCycleName == CYCLE_NAME.ID) {
+                        InstructionFetch.forward(dependencyIndex, Execution.EX_MEM_ALU_OUTPUT);
+                        System.out.println("FORWARD EX.ALU (ID)");
+                     }
+                  }
+               } else {
+                  //Stall
+                  System.out.println("STALL");
+                  return true;
+               }
+            }
+         }
+      }
+      return false;
+   }
+
+   private boolean isNeeded(CYCLE_NAME prevCycleDependName, CYCLE_NAME curCycleName, int i) {
+      return prevCycleDependName.getNum() == (curCycleName.getNum() - i);
+   }
+
+   private boolean isAvailable(CYCLE_NAME cnThis, CYCLE_NAME cnThat) {
+//      return cnThis.isGreaterThanOrEqual(cnThat);
+      return cnThis.isEqual(cnThat);
+   }
+
+   private int getDependencyIndex(Availability curCycleAvail, ArrayList<Dependency> prevCycleDepends) {
+      if (curCycleAvail != null) {
+         int curRegnum = curCycleAvail.getRegNum();
+         for (int i = 0; i < prevCycleDepends.size(); i++) {
+            int prevRegnum = prevCycleDepends.get(i).getRegNum();
+            if (curRegnum == prevRegnum) {
+               return i;
+            }
+         }
+      }
+      return -1;
+   }
+
+   public void runOneCycle() {
+      InstructionFetch.getInstance();
+
+      Writeback.writeback();
+      
+      if (!checkAndForward(MemoryAccess.MEM_WB_IR, new int[]{
+         Execution.EX_MEM_IR,
+         InstructionDecode.ID_EX_IR,
+         InstructionFetch.IF_ID_IR,
+         0x0
+      }, CYCLE_NAME.MEM)) {
+
+         MemoryAccess.loadValues();
+         MemoryAccess.memoryAccess();
+         
+         if (!checkAndForward(Execution.EX_MEM_IR, new int[]{
+            InstructionDecode.ID_EX_IR,
+            InstructionFetch.IF_ID_IR,
+            0x0,
+            MemoryAccess.MEM_WB_IR
+         }, CYCLE_NAME.EX)) {
+
+            Execution.loadValues();
+            Execution.execute();
+            if (!checkAndForward(InstructionDecode.ID_EX_IR, new int[]{
+               InstructionFetch.IF_ID_IR,
+               0x0,
+               MemoryAccess.MEM_WB_IR,
+               Execution.EX_MEM_IR
+            }, CYCLE_NAME.ID)) {
+
+               InstructionDecode.loadValues();
+               InstructionDecode.decode();
+
+               InstructionFetch.loadValues();
+               if (InstructionFetch.PC < endPC) {
+                  InstructionFetch.fetch();
+               }
+>>>>>>> origin/master
             }
         }
         InstructionFetch.printContents();
@@ -327,6 +468,7 @@ public class Scheduler {
         MemoryAccess.printContents();
         Writeback.printContents();
 
+<<<<<<< HEAD
         System.out.println();
         clock++;
     }
@@ -335,4 +477,17 @@ public class Scheduler {
         //
     }
 
+=======
+         }
+      }
+
+      InstructionFetch.printContents();
+      InstructionDecode.printContents();
+      Execution.printContents();
+      MemoryAccess.printContents();
+      Writeback.printContents();
+
+      System.out.println();
+   }
+>>>>>>> origin/master
 }

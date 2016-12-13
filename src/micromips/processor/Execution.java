@@ -3,6 +3,7 @@ package micromips.processor;
 import utilities.UtilityFunctions;
 
 public class Execution {
+   public static boolean hasOldValue = false;
 
     public static long EX_MEM_ALU_OUTPUT = 0;
     public static boolean EX_MEM_COND = false;
@@ -22,11 +23,21 @@ public class Execution {
         if (!hasChangedA) {
             calA = InstructionDecode.ID_EX_A;
 
+<<<<<<< HEAD
         }
         if (!hasChangedB) {
             calB = InstructionDecode.ID_EX_B;
         }
     }
+=======
+      }
+      if (!hasChangedB) {
+         calB = InstructionDecode.ID_EX_B;
+      }
+      Execution.hasOldValue = false;
+      InstructionDecode.hasOldValue = true;
+   }
+>>>>>>> origin/master
 
     public static void forward(int loc, long val) {
         if (loc == 0) {
@@ -38,7 +49,15 @@ public class Execution {
         }
     }
 
+<<<<<<< HEAD
     public static void execute() {
+=======
+   public static boolean hasChanged(){
+      return hasChangedA || hasChangedB;
+   }
+   
+   public static void execute() {
+>>>>>>> origin/master
 
         String binaryIR = UtilityFunctions.to32BitBinString(Execution.EX_MEM_IR);
         switch (binaryIR.substring(0, 6)) {

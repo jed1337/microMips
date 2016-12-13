@@ -4,21 +4,33 @@ import models.Storage;
 import utilities.UtilityFunctions;
 
 public class MemoryAccess {
+<<<<<<< HEAD
 
+=======
+   public static boolean hasOldValue = false;
+    
+>>>>>>> origin/master
     public static long MEM_WB_LMD = 0;
     public static int MEM_WB_IR = 0;
     public static long MEM_WB_ALU_OUTPUT = 0;
 
     private static long calVal = 0x0;
     private static boolean hasChanged = false;
+<<<<<<< HEAD
 
     public static void loadValues() {
+=======
+    
+    public static void loadValues(){       
+>>>>>>> origin/master
         MemoryAccess.MEM_WB_ALU_OUTPUT = Execution.EX_MEM_ALU_OUTPUT;
         MemoryAccess.MEM_WB_IR = Execution.EX_MEM_IR;
 
         if (!hasChanged) {
             calVal = Execution.EX_MEM_B;
         }
+        MemoryAccess.hasOldValue = false;
+        Execution.hasOldValue = true;
     }
 
     public static void forward(long val) {
