@@ -22,6 +22,9 @@ public class Scheduler {
    private final ArrayList<Modification> modifications;
    private final ArrayList<Integer> opcodes;
 
+   private boolean prevStall = false;
+   private int prevStallOpCode = 0x0;
+
    private int endPC = 0x1000;
 
    public Scheduler() {
@@ -184,41 +187,77 @@ public class Scheduler {
 
    public boolean checkAndForward(int curCycle, int[] prevCycles, CYCLE_NAME curCycleName) {
       String opcode = UtilityFunctions.to32BitBinString(curCycle).substring(0, 6);
-      Availability curCycleAvail = Availability.getAvailability(curCycle);
 
+      Availability curCycleAvail = Availability.getAvailability(curCycle);
+      System.out.println("Curr: " + curCycleName);
       for (int i = 0; i < prevCycles.length; i++) {
          int prevCycle = prevCycles[i];
          ArrayList<Dependency> prevCycleDepends = Dependency.getDependencies(prevCycle);
+         String prevopcode = UtilityFunctions.to32BitBinString(prevCycle).substring(0, 6);
+
+         if (cycleHasOldValue(curCycleName, i + 1)) {
+            System.out.println("continue " + curCycleName.name() + " -" + (i + 1));
+            continue;
+         }         
 
          final int dependencyIndex = getDependencyIndex(curCycleAvail, prevCycleDepends);
          if (dependencyIndex != -1) {
             Dependency prevCycleDepend = prevCycleDepends.get(dependencyIndex);
-
+            System.out.println("DEPENDECY " + curCycleName);
             //Check if the dependency is available
             CYCLE_NAME curCycleAvailName = curCycleAvail.getCycleName();
             CYCLE_NAME prevCycleDependName = prevCycleDepend.getCycleName();
 
+            System.out.println("prevstall " + prevStallOpCode);
+            System.out.println("cur cyc " + curCycle);
+            if (prevStallOpCode != curCycle) {
+               prevStall = false;
+               prevStallOpCode = 0x0;
+            }
+            
             //Item is available
             if (isNeeded(prevCycleDependName, curCycleName, i)) {
                if (isAvailable(curCycleName, curCycleAvailName)) {
                   //Forward
                   if (opcode.equals("110111")) {  //Load
                      Execution.forward(dependencyIndex, MemoryAccess.MEM_WB_LMD);
+                     System.out.println("MEM FORWARD");
+                     prevStall = true;
                   } else { //Not load
                      if (curCycleName == CYCLE_NAME.MEM) {
                         if (opcode.equals("111111")) {
                            MemoryAccess.forward(MemoryAccess.MEM_WB_ALU_OUTPUT);
+                           prevStall = true;
+                           System.out.println("MEM FORWARD");
                         } else {
                            Execution.forward(dependencyIndex, MemoryAccess.MEM_WB_ALU_OUTPUT);
+                           System.out.println("MEM FORWARD");
+                           prevStall = true;
                         }
 
                      } else if (curCycleName == CYCLE_NAME.EX) {
-                        Execution.forward(dependencyIndex, Execution.EX_MEM_ALU_OUTPUT);
+                        if (prevopcode.equals("001000")) {
+                           prevStall = true;
+                           InstructionFetch.forward(dependencyIndex, Execution.EX_MEM_ALU_OUTPUT);
+
+                           System.out.println("IF FORWARD");
+                        } else {
+                           prevStall = true;
+                           Execution.forward(dependencyIndex, Execution.EX_MEM_ALU_OUTPUT);
+                           System.out.println("EX FORWARD");
+
+                        }
+
                      }
                   }
                } else {
-                  //Stall
-                  return true;
+                  //Stall    
+                  if (!prevStall) {
+
+                     System.out.println("STALL");
+                     prevStallOpCode = curCycle;
+                     return true;
+                  }
                }
             }
          }
@@ -247,16 +286,42 @@ public class Scheduler {
       return -1;
    }
 
+   private boolean cycleHasOldValue(CYCLE_NAME curCycleName, int i) {
+      int cycleToCheck = curCycleName.getNum() - i;
+
+      if (cycleToCheck < 0) {
+         cycleToCheck += 5;
+      }
+
+      switch (cycleToCheck) {
+         case 5:
+            System.err.println("It shouldn't reach 5 here");
+         case 4:
+            return MemoryAccess.hasOldVal;
+         case 3:
+            return Execution.hasOldVal;
+         case 2:
+            return InstructionDecode.hasOldVal;
+         case 1:
+            return InstructionFetch.hasOldVal;
+         case 0:
+            return false;
+      }
+
+      System.err.println("Invalid cycle to check");
+      return false;
+   }
+
    public void runOneCycle() {
       Writeback.writeback();
-      
+
       if (!checkAndForward(MemoryAccess.MEM_WB_IR, new int[]{
          Execution.EX_MEM_IR,
          InstructionDecode.ID_EX_IR,
          InstructionFetch.IF_ID_IR,
          0x0
       }, CYCLE_NAME.MEM)) {
-         
+
          MemoryAccess.loadValues();
          MemoryAccess.memoryAccess();
 
@@ -269,13 +334,13 @@ public class Scheduler {
 
             Execution.loadValues();
             Execution.execute();
-            if (!checkAndForward(InstructionDecode.ID_EX_IR, new int[]{               
+            if (!checkAndForward(InstructionDecode.ID_EX_IR, new int[]{
                InstructionFetch.IF_ID_IR,
                0x0,
                MemoryAccess.MEM_WB_IR,
                Execution.EX_MEM_IR
             }, CYCLE_NAME.ID)) {
-               
+
                InstructionDecode.loadValues();
                InstructionDecode.decode();
 
@@ -284,7 +349,6 @@ public class Scheduler {
                   InstructionFetch.fetch();
                }
             }
-
          }
 
          InstructionFetch.printContents();

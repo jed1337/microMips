@@ -4,6 +4,7 @@ import models.Storage;
 import utilities.UtilityFunctions;
 
 public class InstructionDecode {
+   public static boolean hasOldVal = false;
 
    public static long ID_EX_A = 0;
    public static long ID_EX_B = 0;
@@ -13,8 +14,18 @@ public class InstructionDecode {
 
    public static void loadValues() {
       if (!InstructionFetch.hasJumped) {
+         boolean isSimilar = 
+         (InstructionDecode.ID_EX_IR == InstructionFetch.IF_ID_IR) && 
+         (InstructionDecode.ID_EX_NPC == InstructionFetch.IF_ID_NPC);
+         
          InstructionDecode.ID_EX_IR = InstructionFetch.IF_ID_IR;
          InstructionDecode.ID_EX_NPC = InstructionFetch.IF_ID_NPC;
+         if(!isSimilar){
+            
+            InstructionFetch.hasOldVal = true;
+         }
+         
+            InstructionDecode.hasOldVal = false;
       }
    }
 

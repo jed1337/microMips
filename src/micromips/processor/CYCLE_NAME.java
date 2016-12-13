@@ -17,6 +17,10 @@ public enum CYCLE_NAME {
       return num;
    }
    
+   public int getCycleCount(){
+      return 5;
+   }
+   
    public boolean isPreviousCycle(CYCLE_NAME that){
       return this.num < that.num;
    }

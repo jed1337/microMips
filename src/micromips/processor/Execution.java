@@ -3,6 +3,7 @@ package micromips.processor;
 import utilities.UtilityFunctions;
 
 public class Execution {
+   public static boolean hasOldVal = false;
 
    public static long EX_MEM_ALU_OUTPUT = 0;
    public static boolean EX_MEM_COND = false;
@@ -16,6 +17,7 @@ public class Execution {
    private static boolean hasChangedB = false;
 
    public static void loadValues() {
+      boolean isSimilar = (Execution.EX_MEM_B == InstructionDecode.ID_EX_B) && (Execution.EX_MEM_IR == InstructionDecode.ID_EX_IR);
       Execution.EX_MEM_B = InstructionDecode.ID_EX_B;
       Execution.EX_MEM_IR = InstructionDecode.ID_EX_IR;
 
@@ -26,6 +28,11 @@ public class Execution {
       if (!hasChangedB) {
          calB = InstructionDecode.ID_EX_B;
       }
+      if (!isSimilar) {
+         InstructionDecode.hasOldVal = true;
+      }
+      
+         Execution.hasOldVal = false;
    }
 
    public static void forward(int loc, long val) {

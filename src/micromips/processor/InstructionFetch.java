@@ -4,12 +4,14 @@ import models.Storage;
 import utilities.UtilityFunctions;
 
 public class InstructionFetch {
+   public static boolean hasOldVal = false;
+   
    public static int IF_ID_IR = 0;
    public static int IF_ID_NPC = 0;
    public static int PC = 0x1000;
 
-   public static boolean hasJumped   = false;
-   
+   public static boolean hasJumped = false;
+
    private static long calA = 0x0;
    private static long calB = 0x0;
 
@@ -22,10 +24,12 @@ public class InstructionFetch {
          calA = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(6, 11), 2));
       }
       if (hasChangedB) {
-         calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));      }
+         calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));
+      }
+      InstructionFetch.hasOldVal = false;
    }
 
-   public void forward(int loc, long val) {
+   public static void forward(int loc, long val) {
       if (loc == 0) {
          calA = val;
          hasChangedA = true;
@@ -40,7 +44,7 @@ public class InstructionFetch {
 
       String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
       final String opCode = binaryIR.substring(0, 6);
-      
+
       hasJumped = false;
       switch (opCode) {
          case "110010": //BC
