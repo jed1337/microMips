@@ -4,6 +4,7 @@ import models.Storage;
 import utilities.UtilityFunctions;
 
 public class InstructionFetch {
+   public static boolean hasOldValue = false;
 
    public static int IF_ID_IR = 0;
    public static int IF_ID_NPC = 0;
@@ -16,7 +17,7 @@ public class InstructionFetch {
 
    private static boolean hasChangedA = false;
    private static boolean hasChangedB = false;
-
+   
    public static void loadValues() {
       String binaryIR = UtilityFunctions.to32BitBinString(InstructionFetch.IF_ID_IR);
       if (hasChangedA) {
@@ -24,6 +25,7 @@ public class InstructionFetch {
       }
       if (hasChangedB) {
          calB = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));      }
+      InstructionFetch.hasOldValue = false;
    }
 
    public static void forward(int loc, long val) {
@@ -49,6 +51,7 @@ public class InstructionFetch {
             hasJumped = true;
             break;
          case "001000": //BEQC
+            //Perform look ahead
             if (calA == calB) {
                InstructionFetch.IF_ID_NPC = InstructionFetch.PC += (Long.parseLong(binaryIR.substring(16, 32), 2) * 4);
                hasJumped = true;

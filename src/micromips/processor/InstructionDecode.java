@@ -4,6 +4,7 @@ import models.Storage;
 import utilities.UtilityFunctions;
 
 public class InstructionDecode {
+   public static boolean hasOldValue = false;
 
    public static long ID_EX_A = 0;
    public static long ID_EX_B = 0;
@@ -16,6 +17,8 @@ public class InstructionDecode {
          InstructionDecode.ID_EX_IR = InstructionFetch.IF_ID_IR;
          InstructionDecode.ID_EX_NPC = InstructionFetch.IF_ID_NPC;
       }
+      InstructionDecode.hasOldValue = false;
+      InstructionFetch.hasOldValue = true;
    }
 
    public static void decode() {
@@ -24,7 +27,7 @@ public class InstructionDecode {
       InstructionDecode.ID_EX_B = Storage.getRegisterValue(Integer.parseInt(binaryIR.substring(11, 16), 2));
       InstructionDecode.ID_EX_IMM = UtilityFunctions.toSignedExtendedImmediate(Integer.parseInt(binaryIR.substring(16, 32), 2));
    }
-
+   
    public static void printContents() {
       System.out.println("--INSTRUCTION DECODE--");
       System.out.println("ID/EX.IR: " + UtilityFunctions.to32BitHexString(InstructionDecode.ID_EX_IR));
