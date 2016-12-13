@@ -3,9 +3,9 @@ package processorTests;
 import java.util.ArrayList;
 import micromips.processor.Scheduler;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import utilities.Errors;
 
 public class TestScheduler {

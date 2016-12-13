@@ -1,25 +1,26 @@
 package models;
 
 public class Modification {
-   private final int instructionIndex;
-   private final String label;
-   private final int argumentIndex;
 
-   public Modification(int instructionIndex, String label, int argumentIndex) {
-      this.instructionIndex = instructionIndex;
-      this.label = label;
-      this.argumentIndex = argumentIndex;
-   }
+    private final int instructionIndex;
+    private final String label;
+    private final int argumentIndex;
 
-   public int getInstructionIndex() {
-      return instructionIndex;
-   }
+    public Modification(int instructionIndex, String label, int argumentIndex) {
+        this.instructionIndex = instructionIndex;
+        this.label = label;
+        this.argumentIndex = argumentIndex;
+    }
 
-   public String getLabel() {
-      return label;
-   }
+    public int getInstructionIndex() {
+        return instructionIndex;
+    }
 
-   public int getArgumentIndex() {
-      return argumentIndex;
-   }
+    public String getLabel() {
+        return label;
+    }
+
+    public int getArgumentIndex() {
+        return argumentIndex;
+    }
 }
