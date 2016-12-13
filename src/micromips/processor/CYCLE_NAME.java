@@ -24,8 +24,4 @@ public enum CYCLE_NAME {
    public boolean isGreaterThanOrEqual(CYCLE_NAME that){
       return this.num >= that.num;
    }
-
-   boolean isEqual(CYCLE_NAME that) {
-      return this.num == that.num;
-   }
 }
