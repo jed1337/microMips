@@ -11,37 +11,71 @@ import models.Modification;
 import models.Storage;
 import utilities.AssemblyRegex;
 import utilities.Errors;
-import utilities.INSTRUCTION_TYPE;
 import utilities.INSTRUCTION_CONTENTS;
+import static utilities.INSTRUCTION_CONTENTS.IMM;
+import static utilities.INSTRUCTION_CONTENTS.LABEL;
+import static utilities.INSTRUCTION_CONTENTS.OPCODE;
+import static utilities.INSTRUCTION_CONTENTS.RD;
+import static utilities.INSTRUCTION_CONTENTS.RS;
+import static utilities.INSTRUCTION_CONTENTS.RT;
+import utilities.INSTRUCTION_TYPE;
 import utilities.UtilityFunctions;
-import static utilities.INSTRUCTION_CONTENTS.*;
 
 public class Scheduler {
 
-   private final ArrayList<Instruction> instructions;
-   private final ArrayList<Modification> modifications;
-   private final ArrayList<Integer> opcodes;
+   private static Scheduler instance;
+
+   public static Scheduler getInstance() {
+      if (instance == null) {
+         instance = new Scheduler();
+      }
+      return instance;
+   }
 
    private boolean prevStall = false;
    private int prevStallOpCode = 0x0;
 
+   private final ArrayList<Instruction> instructions;
+   private final ArrayList<Modification> modifications;
+   private final ArrayList<Integer> opcodes;
+   private final ArrayList<String> codeList;
+   private final ArrayList<Cycle> cycles;
+
    private int endPC = 0x1000;
+   private int clock = 0;
 
    public Scheduler() {
       instructions = new ArrayList<>();
       modifications = new ArrayList<>();
       opcodes = new ArrayList<>();
+      codeList = new ArrayList<>();
+      cycles = new ArrayList<>();
+   }
+
+   public ArrayList getCycles() {
+      return cycles;
    }
 
    public void setInput(String jText) {
+      instructions.clear();
+      opcodes.clear();
+      cycles.clear();
       for (String input : jText.split("\n")) {
          AssemblyRegex ar = new AssemblyRegex(input);
          if (!Errors.getParsingErrors().isEmpty()) {
+            Errors.getParsingErrors().forEach(err->{
+               System.err.println(err);
+            });
             System.err.println(input + " has an error!");
          } else {
             createInstruction(ar.getInstructionContents());
+            codeList.add(input);
          }
       }
+   }
+
+   public ArrayList<String> getCodeList() {
+      return this.codeList;
    }
 
    public void applyModifications() {
@@ -198,7 +232,7 @@ public class Scheduler {
          if (cycleHasOldValue(curCycleName, i + 1)) {
             System.out.println("continue " + curCycleName.name() + " -" + (i + 1));
             continue;
-         }         
+         }
 
          final int dependencyIndex = getDependencyIndex(curCycleAvail, prevCycleDepends);
          if (dependencyIndex != -1) {
@@ -214,7 +248,7 @@ public class Scheduler {
                prevStall = false;
                prevStallOpCode = 0x0;
             }
-            
+
             //Item is available
             if (isNeeded(prevCycleDependName, curCycleName, i)) {
                if (isAvailable(curCycleName, curCycleAvailName)) {
@@ -350,7 +384,6 @@ public class Scheduler {
                }
             }
          }
-
          InstructionFetch.printContents();
          InstructionDecode.printContents();
          Execution.printContents();
@@ -358,6 +391,11 @@ public class Scheduler {
          Writeback.printContents();
 
          System.out.println();
+         clock++;
       }
+   }
+
+   public void loadAllCycles() {
+      //
    }
 }

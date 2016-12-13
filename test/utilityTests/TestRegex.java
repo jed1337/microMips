@@ -5,14 +5,20 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import utilities.AssemblyRegex;
-
-import static org.junit.Assert.*;
 import utilities.Errors;
 import utilities.INSTRUCTION_CONTENTS;
-import static utilities.INSTRUCTION_CONTENTS.*;
+import static utilities.INSTRUCTION_CONTENTS.COMMENT;
+import static utilities.INSTRUCTION_CONTENTS.IMM;
+import static utilities.INSTRUCTION_CONTENTS.LABEL;
+import static utilities.INSTRUCTION_CONTENTS.OPCODE;
+import static utilities.INSTRUCTION_CONTENTS.RD;
+import static utilities.INSTRUCTION_CONTENTS.RS;
+import static utilities.INSTRUCTION_CONTENTS.RT;
 
 public class TestRegex {
    private AssemblyRegex ar;

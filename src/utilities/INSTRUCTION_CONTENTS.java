@@ -1,11 +1,12 @@
 package utilities;
 
 public enum INSTRUCTION_CONTENTS {
-   LABEL,
-   OPCODE,
-   RS,
-   RT,
-   RD,
-   IMM,
-   COMMENT;
+
+    LABEL,
+    OPCODE,
+    RS,
+    RT,
+    RD,
+    IMM,
+    COMMENT;
 }

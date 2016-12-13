@@ -23,7 +23,6 @@ public class Execution {
 
       if (!hasChangedA) {
          calA = InstructionDecode.ID_EX_A;
-
       }
       if (!hasChangedB) {
          calB = InstructionDecode.ID_EX_B;
@@ -31,8 +30,8 @@ public class Execution {
       if (!isSimilar) {
          InstructionDecode.hasOldVal = true;
       }
-      
-         Execution.hasOldVal = false;
+
+      Execution.hasOldVal = false;
    }
 
    public static void forward(int loc, long val) {
@@ -45,8 +44,11 @@ public class Execution {
       }
    }
 
-   public static void execute() {
+   public static boolean hasChanged() {
+      return hasChangedA || hasChangedB;
+   }
 
+   public static void execute() {
       String binaryIR = UtilityFunctions.to32BitBinString(Execution.EX_MEM_IR);
       switch (binaryIR.substring(0, 6)) {
          case "000000":

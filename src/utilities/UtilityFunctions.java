@@ -30,47 +30,47 @@ public class UtilityFunctions {
 
         return opCode;
     }
-    
-    public static String to32BitBinString(int val){
+
+    public static String to32BitBinString(int val) {
         String s = Integer.toBinaryString(val);
         int numPadding = 32 - s.length();
-        while(numPadding > 0){
+        while (numPadding > 0) {
             s = '0' + s;
             numPadding--;
         }
-        
+
         return s;
     }
-    
-    public static long toSignedExtendedImmediate(int val){
+
+    public static long toSignedExtendedImmediate(int val) {
         String s = Integer.toBinaryString(val);
         int numPadding = 16 - s.length();
         char pad = '0';
-        while(numPadding > 0){
+        while (numPadding > 0) {
             s = pad + s;
             numPadding--;
         }
         numPadding = 64 - s.length();
-        if(s.charAt(0) == '1'){
+        if (s.charAt(0) == '1') {
             pad = '1';
         }
-        while(numPadding > 0){
+        while (numPadding > 0) {
             s = pad + s;
             numPadding--;
         }
         return Long.parseUnsignedLong(s, 2);
     }
-    
-    public static String to32BitHexString(int val){
+
+    public static String to32BitHexString(int val) {
         return String.format("%08x", val).toUpperCase();
     }
-    
-    public static String to64BitHexString(int val){
-        return String.format("%016x", (long)val).toUpperCase();
+
+    public static String to64BitHexString(int val) {
+        return String.format("%016x", (long) val).toUpperCase();
     }
 
-    public static String to64BitHexString(long val){
+    public static String to64BitHexString(long val) {
         return String.format("%016x", val).toUpperCase();
     }
-    
+
 }

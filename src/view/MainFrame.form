@@ -13,6 +13,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run One Cycle"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMenu5MouseClicked"/>
+              </Events>
             </Menu>
             <Menu class="javax.swing.JMenu" name="jMenu6">
               <Properties>
@@ -41,6 +44,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="GOTO Memory"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMenu4MouseClicked"/>
+              </Events>
             </Menu>
           </SubComponents>
         </Menu>
@@ -118,7 +124,7 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="pipelineMap" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -129,19 +135,19 @@
           <Group type="102" attributes="0">
               <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel26" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jScrollPane1" pref="267" max="32767" attributes="0"/>
-                  <Component id="jScrollPane4" alignment="0" max="32767" attributes="0"/>
-                  <Component id="pipelineMap" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane4" pref="268" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -241,7 +247,7 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="registerTable">
           <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="DefaultTableModel registerModel = (DefaultTableModel) registerTable.getModel();&#xa;&#xa;for(int i=0;i&lt;32;i++){&#xa;    registerModel.addRow(new Object[]{&quot;R&quot; + i, &quot;0000000000000000&quot;});&#xa;}&#xa;&#xa;registerTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            dialogClass.createDialog(&quot;NOINPUT&quot;, 0, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="DefaultTableModel registerModel = (DefaultTableModel) registerTable.getModel();&#xa;&#xa;for(int i=0;i&lt;32;i++){&#xa;    registerModel.addRow(new Object[]{&quot;R&quot; + i, &quot;0000000000000000&quot;});&#xa;}&#xa;&#xa;registerTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            dialogClass.createDialog(&quot;NOINPUT&quot;, 0, row, 0);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
               <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Register&quot;, &quot;Value&quot;&#xa;    }&#xa;) {&#xa;    Class[] types = new Class [] {&#xa;        java.lang.String.class, java.lang.String.class&#xa;    };&#xa;    boolean[] canEdit = new boolean [] {&#xa;        false, false&#xa;    };&#xa;&#xa;    public Class getColumnClass(int columnIndex) {&#xa;        return types [columnIndex];&#xa;    }&#xa;&#xa;    JTextField textField = new JTextField(&quot;&quot;);&#xa;&#xa;    public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;        return canEdit [columnIndex];&#xa;    }&#xa;}" type="code"/>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -291,7 +297,7 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[0, 0]"/>
             </Property>
-            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor" postCode="DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();&#xa;&#xa;int memVal = 0x3000;&#xa;&#xa;for(int i=0;i&lt;1024;i++){&#xa;    memoryModel.addRow(new Object[]{Integer.toHexString(memVal).toUpperCase(), &quot;0000000000000000&quot;});&#xa;    memVal += 0x8;&#xa;}&#xa;&#xa;memoryTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        String memoryAddress;&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            memoryAddress = (memoryTable.getValueAt(row, 0)).toString();&#xa;            dialogClass.createDialog(memoryAddress, 1, row);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor" postCode="DefaultTableModel memoryModel = (DefaultTableModel) memoryTable.getModel();&#xa;&#xa;int memVal = 0x3000;&#xa;&#xa;for(int i=0;i&lt;1024;i++){&#xa;    memoryModel.addRow(new Object[]{Integer.toHexString(memVal).toUpperCase(), &quot;0000000000000000&quot;});&#xa;    memVal += 0x8;&#xa;}&#xa;&#xa;memoryTable.addMouseListener(new MouseAdapter() {&#xa;    public void mousePressed(MouseEvent me) {&#xa;        JTable table =(JTable) me.getSource();&#xa;        Point p = me.getPoint();&#xa;        String memoryAddress;&#xa;        if (me.getClickCount() == 2) {&#xa;            int row = table.rowAtPoint(p);&#xa;            memoryAddress = (memoryTable.getValueAt(row, 0)).toString();&#xa;            dialogClass.createDialog(memoryAddress, 1, row, 0);&#xa;            dialogClass.showDialog();&#xa;        }&#xa;    }&#xa;});">
               <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
@@ -340,6 +346,9 @@
               <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="DefaultTableModel codeModel = (DefaultTableModel) codeTable.getModel();&#xa;&#xa;int codeVal = 0x1000;&#xa;&#xa;for(int i=0;i&lt;2048;i++){&#xa;    codeModel.addRow(new Object[]{Integer.toHexString(codeVal).toUpperCase(), &quot;00000000&quot;});&#xa;    codeVal += 0x4;&#xa;}"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -348,7 +357,16 @@
         <Property name="text" type="java.lang.String" value="Code Segment:"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="pipelineMap">
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <Properties>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[452, 402]"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JScrollPane(pipelinePanel)"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="pipelinePanel.repaint();"/>
+      </AuxValues>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
     </Container>

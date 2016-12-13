@@ -5,14 +5,21 @@
  */
 package view;
 
-import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import micromips.processor.Execution;
+import micromips.processor.InstructionDecode;
+import micromips.processor.InstructionFetch;
+import micromips.processor.MemoryAccess;
+import micromips.processor.Scheduler;
 import models.Storage;
+import utilities.Errors;
 import utilities.UtilityFunctions;
 
 /**
@@ -24,11 +31,13 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
-    
     DialogClass dialogClass;
-    
+    private PipelinePanel pipelinePanel;
+
     public MainFrame() {
         dialogClass = new DialogClass(this);
+        pipelinePanel = new PipelinePanel();
+        pipelinePanel.setSize(452, 402);
         initComponents();
     }
 
@@ -58,7 +67,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         codeTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        pipelineMap = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane(pipelinePanel);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
@@ -173,7 +182,7 @@ public class MainFrame extends javax.swing.JFrame {
                 Point p = me.getPoint();
                 if (me.getClickCount() == 2) {
                     int row = table.rowAtPoint(p);
-                    dialogClass.createDialog("NOINPUT", 0, row);
+                    dialogClass.createDialog("NOINPUT", 0, row, 0);
                     dialogClass.showDialog();
                 }
             }
@@ -226,7 +235,7 @@ public class MainFrame extends javax.swing.JFrame {
                 if (me.getClickCount() == 2) {
                     int row = table.rowAtPoint(p);
                     memoryAddress = (memoryTable.getValueAt(row, 0)).toString();
-                    dialogClass.createDialog(memoryAddress, 1, row);
+                    dialogClass.createDialog(memoryAddress, 1, row, 0);
                     dialogClass.showDialog();
                 }
             }
@@ -263,6 +272,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         codeTable.getTableHeader().setReorderingAllowed(false);
+        DefaultTableModel codeModel = (DefaultTableModel) codeTable.getModel();
+
+        int codeVal = 0x1000;
+
+        for(int i=0;i<2048;i++){
+            codeModel.addRow(new Object[]{Integer.toHexString(codeVal).toUpperCase(), "00000000"});
+            codeVal += 0x4;
+        }
         jScrollPane7.setViewportView(codeTable);
         if (codeTable.getColumnModel().getColumnCount() > 0) {
             codeTable.getColumnModel().getColumn(0).setResizable(false);
@@ -277,9 +294,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Code Segment:");
 
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(452, 402));
+        pipelinePanel.repaint();
+
         jMenu1.setText("Run");
 
         jMenu5.setText("Run One Cycle");
+        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu5MouseClicked(evt);
+            }
+        });
         jMenu1.add(jMenu5);
 
         jMenu6.setText("Run All Cycles");
@@ -303,6 +328,11 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu3.setText("Memory");
 
         jMenu4.setText("GOTO Memory");
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu4MouseClicked(evt);
+            }
+        });
         jMenu3.add(jMenu4);
 
         jMenuBar1.add(jMenu3);
@@ -342,7 +372,7 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jLabel4))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(pipelineMap))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -355,11 +385,11 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4)
-                    .addComponent(pipelineMap))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -376,106 +406,118 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /*private class DrawPipelineMap extends JPanel {
-
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);  
-
-            Graphics2D g2d = (Graphics2D) g;
-            animCycles.stream().forEach((cycle) -> {
-                cycle.paint(g2d);
-            });
-        }
-    }*/
-    
     private void loadButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loadButtonMouseClicked
         try {
+            Errors.getParsingErrors().clear();
+            Errors.getRuntimeErrors().clear();
+            clearValues();
+            updateTables();
             String userCode = sourceCodeArea.getText();
 
-            System.out.println(userCode);
+            //load into memory
+            Scheduler.getInstance().setInput(userCode);
+            Scheduler.getInstance().applyModifications();
+            Scheduler.getInstance().setOpcodes();
+            Scheduler.getInstance().storeOpcodes();
+
+            ArrayList<String> codeList = Scheduler.getInstance().getCodeList();
+            ArrayList<Integer> list = Scheduler.getInstance().getOpcodes();
+            System.out.println("List size: " + list.size());
+            for (int i = 0; i < list.size(); i++) {
+                codeTable.setValueAt(UtilityFunctions.to32BitHexString(list.get(i)), i, 1);
+                codeTable.setValueAt(codeList.get(i), i, 3);
+            }
+
         } catch (Exception e) {
             //do nothing
         }
     }//GEN-LAST:event_loadButtonMouseClicked
 
+    public void clearValues() {
+        for (int i = 0; i < 1023; i++) {
+            int mem = 0x3000 + (i * 0x8);
+            Storage.dataStoreDouble(mem, 0x0);
+        }
+        for (int i = 1; i < 32; i++) {
+            Storage.storeRegisterValue(i, 0x0);
+        }
+        InstructionFetch.PC = 0x1000;
+
+        Execution.EX_MEM_COND = false;
+
+        InstructionFetch.IF_ID_IR = InstructionFetch.IF_ID_NPC
+                = InstructionDecode.ID_EX_IR = InstructionDecode.ID_EX_NPC
+                = Execution.EX_MEM_IR = MemoryAccess.MEM_WB_IR = 0x0;
+
+        InstructionDecode.ID_EX_A = InstructionDecode.ID_EX_B
+                = InstructionDecode.ID_EX_IMM = Execution.EX_MEM_ALU_OUTPUT
+                = Execution.EX_MEM_B = MemoryAccess.MEM_WB_ALU_OUTPUT = MemoryAccess.MEM_WB_LMD = 0x0;
+    }
+
+    public void updateTables() {
+        for (int i = 0; i < 1023; i++) {
+            int mem = 0x3000 + (i * 0x8);
+            memoryTable.setValueAt(UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(mem)), i, 1);
+        }
+        for (int i = 1; i < 32; i++) {
+            registerTable.setValueAt(UtilityFunctions.to64BitHexString(Storage.getRegisterValue(i)), i, 1);
+        }
+
+        internalRegTable.setValueAt(UtilityFunctions.to32BitHexString(InstructionFetch.IF_ID_IR), 0, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionFetch.IF_ID_NPC), 1, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionFetch.PC), 2, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to32BitHexString(InstructionDecode.ID_EX_IR), 3, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionDecode.ID_EX_NPC), 4, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionDecode.ID_EX_A), 5, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionDecode.ID_EX_B), 6, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(InstructionDecode.ID_EX_IMM), 7, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to32BitHexString(Execution.EX_MEM_IR), 8, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(Execution.EX_MEM_ALU_OUTPUT), 9, 1);
+        internalRegTable.setValueAt(Execution.EX_MEM_COND ? 1 : 0, 10, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(Execution.EX_MEM_B), 11, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to32BitHexString(MemoryAccess.MEM_WB_IR), 12, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(MemoryAccess.MEM_WB_LMD), 13, 1);
+        internalRegTable.setValueAt(UtilityFunctions.to64BitHexString(MemoryAccess.MEM_WB_ALU_OUTPUT), 14, 1);
+    }
+
     private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
-        PipelinePanel pipelinePanel = new PipelinePanel();
-        pipelinePanel.setSize(500, 500);
-        //pipelinePanel.setPreferredSize(new Dimension(1000, 1000));
-        pipelineMap.add(pipelinePanel);
         pipelinePanel.repaint();
-        /*try {
-            DrawPipelineMap drawPane = new DrawPipelineMap();
-            drawPane.setSize(600, 600);
-            pipelineMap.add(drawPane);
-            ArrayList<Cycle> cycles = new ArrayList<Cycle>();
-            
-            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 0, 0));
-            
-            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 1, 1));
-            cycles.add(new Cycle(Cycle.INSTRUCTION_DECODE, 0, 1));
-
-            cycles.add(new Cycle(Cycle.INSTRUCTION_FETCH, 2, 2));
-            cycles.add(new Cycle(Cycle.INSTRUCTION_DECODE, 1, 2));
-            cycles.add(new Cycle(Cycle.EXECUTION, 0, 2));
-
-            cycles.add(new Cycle(Cycle.STALL, 2, 3));
-            cycles.add(new Cycle(Cycle.EXECUTION, 1, 3));
-            cycles.add(new Cycle(Cycle.MEMORY_ACCESS, 0, 3));
-
-            int x, y;
-            for (Cycle cycle : cycles) {
-                x = cycle.getClockCycleNo();
-                y = cycle.getInstructionNo();
-                switch (cycle.getCycleString()) {
-                    case "IF":
-                        animCycles.add(new MapBlock(x*30, y*30, "#2ecc71"));
-                        //drawPane.update(x*30, y*30, "#2ecc71");
-                        break;
-                    case "ID":
-                        animCycles.add(new MapBlock(x*30, y*30, "#3498db"));
-                        break;
-                    case "EX":
-                        animCycles.add(new MapBlock(x*30, y*30, "#f1c40f"));
-                        break;
-                    case "MEM":
-                        animCycles.add(new MapBlock(x*30, y*30, "#e67e22"));
-                        break;    
-                    case "WB":
-                        animCycles.add(new MapBlock(x*30, y*30, "#e74c3c"));
-                        break;
-                    default:
-                        animCycles.add(new MapBlock(x*30, y*30, "#000000"));
-                        break;
-                }
-                
-                repaint();
-            }
-        } catch(Exception e){
-            
-        }*/
     }//GEN-LAST:event_jMenu6MouseClicked
+
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+        dialogClass.createDialog("NOINPUT", 0, 0, 1);
+        dialogClass.showDialog();
+    }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+        Scheduler.getInstance().runOneCycle();
+        updateTables();
+        pipelinePanel.updatePanel(Scheduler.getInstance().getCycles());
+        pipelinePanel.repaint();
+    }//GEN-LAST:event_jMenu5MouseClicked
+
+    public void jumpToMemory(int cell) {
+        memoryTable.scrollRectToVisible(new Rectangle(memoryTable.getCellRect(cell, 0, true)));
+    }
 
     public void setValue(String memoryAddress, String value, int toggle, int row) {
         String s;
-    
+
         try {
-            if(toggle == 0) {
+            if (toggle == 0) {
                 //register
-                DefaultTableModel model = (DefaultTableModel)registerTable.getModel();
+                DefaultTableModel model = (DefaultTableModel) registerTable.getModel();
                 Storage.storeRegisterValue(row, Long.parseUnsignedLong(value, 16));
                 s = (UtilityFunctions.to64BitHexString(Storage.getRegisterValue(row))).toUpperCase();
                 model.setValueAt(s, row, 1);
-            }
-            else {
+            } else {
                 //memory
-                DefaultTableModel model = (DefaultTableModel)memoryTable.getModel();
+                DefaultTableModel model = (DefaultTableModel) memoryTable.getModel();
                 Storage.dataStoreDouble(Integer.parseInt(memoryAddress, 16), Long.parseUnsignedLong(value, 16));
                 s = (UtilityFunctions.to64BitHexString(Storage.dataLoadDouble(Integer.parseInt(memoryAddress, 16)))).toUpperCase();
                 model.setValueAt(s, row, 1);
             }
-        }   catch (Exception e) {
+        } catch (Exception e) {
             //do nothing
         }
     }
@@ -483,7 +525,6 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -501,9 +542,8 @@ public class MainFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
-        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new MainFrame().setVisible(true);
@@ -526,6 +566,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
@@ -533,7 +574,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JMenu loadButton;
     private javax.swing.JTable memoryTable;
-    private javax.swing.JScrollPane pipelineMap;
     private javax.swing.JTable registerTable;
     private javax.swing.JTextArea sourceCodeArea;
     // End of variables declaration//GEN-END:variables
